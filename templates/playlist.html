@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="../style/home.css">
+        <title>Spotify API</title>
+        <style>
+            body {
+                    font-family: Arial, sans-serif;
+                    background-color: #121212;
+                    color: white;
+                    text-align: center;
+                    margin: 0;
+                    padding: 0;
+                }
+
+                h1, h2 {
+                    color: #1DB954;
+                }
+
+                a {
+                    color: #1DB954;
+                    text-decoration: none;
+                    font-weight: bold;
+                    display: inline-block;
+                    padding: 10px 20px;
+                    border: 2px solid #1DB954;
+                    border-radius: 20px;
+                    transition: background 0.3s;
+                }
+
+                a:hover {
+                    background: #1DB954;
+                    color: black;
+                }
+
+                img {
+                    border-radius: 10px;
+                    margin: 10px;
+                }
+
+                table {
+                    width: 80%;
+                    margin: 20px auto;
+                    border-collapse: collapse;
+                    background: #1e1e1e;
+                    border-radius: 10px;
+                    overflow: hidden;
+                }
+
+                table th, table td {
+                    border: 1px solid #333;
+                    padding: 15px;
+                }
+
+                table th {
+                    background: #1DB954;
+                    color: black;
+                }
+
+                table tr:nth-child(even) {
+                    background: #242424;
+                }
+
+                table tr:hover {
+                    background: #333;
+                }
+
+
+        </style>
+    </head>
+    <body>
+    <h1>Benvenuto, {{ user_info['display_name'] }}!</h1>
+        {% if user_info['images'] %}
+        <img src="{{ user_info['images'][0]['url'] }}" width="200">
+        {% endif %}
+
+        <a href="{{ url_for('home.home') }}" class="back-button">Torna alle Playlist</a>
+
+        <h2>I brani della tua playlist: </h2>
+        {% if brani %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome Brano</th>
+                        <th>Album</th>
+                        <th>Artista</th>
+                        <th>Copertina</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for brano in brani %}
+                <tr>
+                    <td>{{ brano['track']['name'] }}</td>
+                    <td>{{ brano['track']['album']['name'] }}</td>
+                    <td>
+                        {% for artist in brano['track']['artists'] %}
+                        {{ artist['name'] }}{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                    {% if brano['track']['album']['images'] %}
+                        <img src="{{ brano['track']['album']['images'][0]['url'] }}" width="50" alt="Copertina playlist">
+                    {% else %}
+                        Nessuna immagine
+                    {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>Non ci sono brani nella playlist.</p>
+        {% endif %}
+    </body>
+</html>
