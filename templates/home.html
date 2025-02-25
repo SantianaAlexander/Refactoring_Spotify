@@ -11,20 +11,24 @@
         <div class="logo">Spotify App</div>
         <ul>
             <li><a href="/#">About Us</a></li>
-            {% if session['access_token'] %}
-                <li><a href="//playlist/{{ playlist['id'] }}">Le mie playlist</a></li>
-                <li><a href="/profile"><img src="{{ session['profile_pic'] }}" alt="Profilo" class="profile-pic"></a></li>
-                <li><a href="/logout" class="logout-btn">Logout</a></li>
+            {% if session['token_info'] %}
+                <li><a href="/playlist/{{ playlists['id'] }}">Le mie playlist</a></li>
+                <div class="profile-dropdown">
+                    <img src="{{ profile_pic_url }}" class="profile-pic" alt="Profile Image">
+                    <div class="dropdown-menu">
+                        <a href="{{ url_for('auth.logout') }}">Logout</a>
+                    </div>
+                </div>
             {% else %}
                 <li><a href="{{ url_for('auth.login') }}" class="login-btn">Login con Spotify</a></li>
             {% endif %}
         </ul>
     </nav>
     <main>
-        {% if session['access_token'] %}
-            <h1>Benvenuto, {{ user_info["username"] }}!</h1>
+        {% if session['token_info'] %}
+            <h1>Benvenuto, {{ user_info["display_name"] }}!</h1>
             <p>Scopri la tua musica e le tue playlist preferite.</p>
-            <a href="//playlist/{{ playlist['id'] }}" class="btn">Vai alle playlist</a>
+            <a href="/playlist/{{ playlists['id'] }}" class="btn">Vai alle playlist</a>
         {% else %}
             <h1>Scopri la tua musica con Spotify</h1>
             <p>Accedi con Spotify per visualizzare le tue playlist e scoprire nuove canzoni!</p>

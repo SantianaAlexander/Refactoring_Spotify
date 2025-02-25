@@ -16,28 +16,32 @@ def get_spotify_client():
         client_secret="9d1c008a6aaa4a969b178224406d5a73"
     ))
 
-#def get_user_playlists(user_id):
-    #token_info = session.get('token_info')
-    #if not token_info:
-   #     return None
-    #sp = spotipy.Spotify(auth=token_info['access_token'])
-   # playlists = sp.user_playlists(user_id)
-    #return playlists['items']
+def get_user_playlists(user_id):
+    token_info = session.get('token_info')
+    if not token_info:
+        return None
+    sp = spotipy.Spotify(auth=token_info['access_token'])
+    playlists = sp.user_playlists(user_id)
+    return playlists['items']
 
-@home_bp.route('/')
+@home_bp.route('/', methods = ["GET", "POST"])
 def home():
     sp = get_spotify_client()
-    user_info = None
-    playlists = []
+    user_info = None,
+    playlists = [],
+    profile_pic_url = None
     
     if isinstance(sp, spotipy.Spotify) and session.get("token_info"):
         try:
             user_info = sp.current_user()
             playlists = sp.current_user_playlists()["items"]
+            if user_info.get("images"):
+                profile_pic_url = user_info["images"][0]["url"] 
         except Exception:
             pass 
+
     
-    return render_template('home.html', user_info=user_info, playlists=playlists, login_url=sp_oauth.get_authorize_url())
+    return render_template('home.html', user_info=user_info, playlists=playlists, profile_pic_url = profile_pic_url, login_url=sp_oauth.get_authorize_url())
 
 
 @home_bp.route('/playlist/<playlist_id>')
