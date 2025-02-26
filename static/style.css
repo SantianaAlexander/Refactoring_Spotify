@@ -1,4 +1,4 @@
-/* CSS HOME */
+/* Reset generale */
 * {
     margin: 0;
     padding: 0;
@@ -17,17 +17,19 @@ body {
 /* Navbar */
 nav {
     display: flex;
-    justify-content: space-between; 
-    align-items: center; 
-    padding: 20px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 40px;
     background-color: #181818;
-    position: fixed; /* Rende la navbar fissa */
-    top: 0;
-    left: 0;
-    width: 100%; /* Assicura che la navbar occupi tutta la larghezza */
-    background-color: #181818; /* Puoi cambiare il colore di sfondo a piacere */
-    z-index: 1000; /* Garantisce che la navbar sia sopra gli altri elementi */
-    padding: 10px 20px; /* Puoi aggiungere padding per la navbar */
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 50px;
+    border-radius: 25px;
+    z-index: 1000;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
 }
 
 nav .logo {
@@ -36,44 +38,166 @@ nav .logo {
     font-weight: bold;
 }
 
-ul {
+nav .search-form {
+    display: flex;
     align-items: center;
+}
+
+nav .search-input {
+    padding: 8px;
+    border-radius: 20px;
+    border: none;
+    margin-right: 10px;
+}
+
+nav .search-btn {
+    background-color: #ffffff;
+    border: none;
+    padding: 8px;
+    border-radius: 20px;
+    cursor: pointer;
 }
 
 nav ul {
     list-style: none;
     display: flex;
-    gap: 20px;
-    margin-left: auto;
-}
-
-nav ul li {
-    font-size: 1rem;
-    align-items: center; 
+    gap: 15px;
 }
 
 nav ul li a {
     color: white;
     text-decoration: none;
     font-weight: bold;
-    padding: 10px;
+    padding: 8px 15px;
     border-radius: 20px;
     transition: background 0.3s ease, color 0.3s ease;
 }
 
 nav ul li a:hover {
-    background-color: #1DB954;
+    background-color: #ffffff;
     color: black;
 }
 
+nav .profile-dropdown {
+    position: relative;
+}
+
+nav .profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+nav .dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #181818;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+nav .profile-dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+nav .dropdown-menu a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    padding: 8px 15px;
+    border-radius: 20px;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+nav .dropdown-menu a:hover {
+    background-color: #ffffff;
+    color: black;
+}
+
+nav .login-btn, nav .signup-btn {
+    background-color: #ffffff;
+    color: black;
+    padding: 8px 15px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+nav .login-btn:hover, nav .signup-btn:hover {
+    background-color: #fefefe;
+    color: black;
+}
+
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logo-link {
+    text-decoration: none;
+    display: inline-block;
+    padding: 10px;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+
+
+.logo-image {
+    width: 35px;
+    height: 35px;
+    border-radius: 100%;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+}
+
+.search-input {
+    padding: 8px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+    font-size: 1rem;
+    outline: none;
+}
+
+.search-btn {
+    background-color: #ffffff;
+    border: none;
+    padding: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    transition: background-color 0.3s ease;
+}
+
+.search-btn:hover {
+    background-color: #ffffff;
+}
+
+.search-icon {
+    width: 35px;
+    height: 35px;
+    border-radius: 100%;
+}
 /* Main content */
 main {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: calc(100vh - 80px);
-    padding: 20px;
+    padding: 80px 20px;
     text-align: center;
 }
 
@@ -86,115 +210,57 @@ main h1 {
 main p {
     font-size: 1.2rem;
     margin-bottom: 20px;
-    color: white;
 }
 
-.main .btn {
-    background-color: #1DB954;
-    color: black;
-    font-weight: bold;
-    padding: 15px 30px;
-    border-radius: 25px;
-    text-decoration: none;
-    transition: background 0.3s ease, transform 0.3s ease;
+/* Card container */
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px auto;
 }
 
-main .btn:hover {
-    background-color: #1a9d42;
-    transform: scale(1.05);
-}
-
-/* Profile image styling */
-.profile-pic {
-    border-radius: 50%;
-    width: 40px;    
-    height: 40px;
-    object-fit: cover;
-    cursor: pointer;
-}
-.profile-pic:hover {
-    background-color: #1a9d42;
-    transform: scale(1.05);
-}
-
-/* Profilo utente con dropdown */
-.profile-dropdown {
-    position: relative;
-    display: inline-block;
-    margin-left: 20px; 
-}
-
-/* Menu dropdown nascosto inizialmente */
-.dropdown-menu {
-    display: none;
-    position: absolute;
-    right: 0;
-    top: 100%;
-    background-color: #181818;
-    border-radius: 10px;
+/* Stile delle card */
+.card {
+    background: #181818;
+    padding: 20px;
+    border-radius: 15px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
-    padding: 10px;
-    z-index: 1000;
+    text-align: center;
+    transition: transform 0.3s ease;
 }
 
-/* Link nel dropdown */
-.dropdown-menu a {
-    color: white;
-    text-decoration: none;
-    padding: 10px;
-    display: block;
-    border-radius: 5px;
-    transition: background 0.3s ease;
+.card:hover {
+    transform: scale(1.05);
 }
 
-.dropdown-menu a:hover {
-    background-color: #1DB954;
+.card img {
+    width: 100%;
+    border-radius: 10px;
 }
 
-/* Mostra il menu al passaggio del mouse */
-.profile-dropdown:hover .dropdown-menu {
-    display: block;
+.card h3 {
+    margin-top: 10px;
+    font-size: 1.2rem;
+    color: #1DB954;
 }
 
-/* Barra di ricerca centrata */
-.search-form {
-    flex-grow: 1; /* Occupa lo spazio tra logo e link */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.search-input {
-    border: none;
-    background: #222;
-    color: white;
-    outline: none;
-    padding: 8px 12px;
-    border-radius: 20px;
-    width: 200px;
-}
-
-.search-btn {
-    border: none;
-    background: none;
-    color: white;
-    cursor: pointer;
+.card p {
     font-size: 1rem;
-    padding: 8px;
+    color: white;
 }
-
-
-
 
 /* Responsive Design */
 @media (max-width: 768px) {
     nav {
-        flex-direction: column;
-        text-align: center;
+        width: 90%;
+        height: 45px;
+        padding: 10px 20px;
     }
 
     nav ul {
-        flex-direction: column;
         gap: 10px;
     }
 

@@ -6,14 +6,20 @@
         <link rel="stylesheet" href="../static/style.css">
         <title>Spotify API</title>
     </head>
-    <body style="background-color: #121212;">
+    
         <!-- NAVBAR -->
         <nav>
-            <div class="logo"><a href="{{ url_for('home.home') }}" style="color: inherit; text-decoration: none;">Spotify App</a></div>
-            <form class="search-form" action="{{ url_for('home.home') }}" method="POST">
+            <div class="logo-container">
+                <a href="{{ url_for('home.home') }}" class="logo-link">
+                    <img src="/static/images/home.jpg" alt="Spotify Logo" class="logo-image">
+                </a>
+            </div>
+            <div class="search-container">
                 <input type="text" name="query" placeholder="Cerca playlist..." class="search-input">
-                <button type="submit" class="search-btn">🔍</button>
-            </form>
+                <button type="submit" class="search-btn">
+                    <img src="/static/images/lente.jpg" alt="Search" class="search-icon">
+                </button>
+            </div>
             <ul>
                 <li><a href="{{ url_for('aboutus.about_us') }}">About Us</a></li>
                 {% if session['token_info'] %}
@@ -29,6 +35,7 @@
                 {% endif %}
             </ul>
         </nav>
+        
         <main class="pt-5">
             {% if session['token_info'] %}
                 <h1>Benvenuto, {{ user_info["display_name"] }}!</h1>

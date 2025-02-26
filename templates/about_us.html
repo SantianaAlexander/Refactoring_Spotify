@@ -88,13 +88,19 @@
 <body>
     <!-- NAVBAR -->
     <nav>
-        <div class="logo"><a href="{{ url_for('home.home') }}" style="color: inherit; text-decoration: none;">Spotify App</a></div>
-        <form class="search-form" action="/" method="POST">
-            <input type="text" name="query" placeholder="Cerca playlist.." class="search-input">
-            <button type="submit" class="search-btn">🔍</button>
-        </form>
+        <div class="logo-container">
+            <a href="{{ url_for('home.home') }}" class="logo-link">
+                <img src="/static/images/bnt.jpg" alt="Spotify Logo" class="logo-image">
+            </a>
+        </div>
+        <div class="search-container">
+            <input type="text" name="query" placeholder="Cerca playlist..." class="search-input">
+            <button type="submit" class="search-btn">
+                <img src="/static/images/lente.jpg" alt="Search" class="search-icon">
+            </button>
+        </div>
         <ul>
-            <li><a href="#">About us</a></li>
+            <li><a href="{{ url_for('aboutus.about_us') }}">About Us</a></li>
             {% if session['token_info'] %}
                 <li><a href="{{ url_for('playlist.playlist') }}">Le mie playlist</a></li>
                 <div class="profile-dropdown">
@@ -111,24 +117,24 @@
 
     <!-- SEZIONE ABOUT US -->
     <main class="container text-center mb-5 mainAbout">
-        <h1 class="h1About">Chi siamo</h1>
-        <p>Benvenuti nella nostra app Spotify! Siamo un team di appassionati di musica e tecnologia.</p>
+        <h1 class="h1About">ti presneto a me squattra</h1>
+        <p>scrivero qualcosa </p>
         <div class="row justify-content-center mt-4">
             <div class="col-md-6 col-sm-6">
                 <div class="team-member">
-                    <img src="../static/images/the_guy_is_chasing_a_naked_woman.png" alt="Mario Rossi">
-                    <h3>Tinto Riccardo</h3>
-                    <p>Ruolo: Sviluppatore Backend</p>
-                    <p>Email: mario.rossi@example.com</p>
+                    <img src="../static/images/tinto.jpg" alt="">
+                    <h3>me compare oh mammut</h3>
+                    <p>Ruolo: Sviluppatore Backend,Designer,</p>
+                    <p>Email: tintoriccardo@gmail.com</p>
                     <p>Telefono: +39 123 456 7890</p>
                 </div>
             </div>
             <div class="col-md-6 col-sm-6">
                 <div class="team-member">
-                    <img src="../static/images/Maneci.jpg" alt="Luigi Verdi">
-                    <h3>Maneth Wijeratne</h3>
+                    <img src="../static/images/maneth.jpg" alt="Luigi Verdi">
+                    <h3>u trichecu</h3>
                     <p>Ruolo: Sviluppatore Frontend</p>
-                    <p>Email: luigi.verdi@example.com</p>
+                    <p>Email: manethwjacne@gmail.com</p>
                     <p>Telefono: +39 234 567 8901</p>
                 </div>
             </div>
@@ -137,18 +143,18 @@
             <div class="col-md-6 col-sm-6">
                 <div class="team-member">
                     <img src="../static/images/Biello.png" alt="Giovanna Bianchi">
-                    <h3>Biello Gabriele</h3>
+                    <h3>u signor napoli</h3>
                     <p>Ruolo: UX/UI Designer</p>
-                    <p>Email: giovanna.bianchi@example.com</p>
+                    <p>Email: Biellomipiaccionolebananonenere@gmail.com</p>
                     <p>Telefono: +39 345 678 9012</p>
                 </div>
             </div>
             <div class="col-md-6 col-sm-6">
                 <div class="team-member">
                     <img src="../static/images/Santi.jpg" alt="Carlo Neri">
-                    <h3>Santiana Alexander</h3>
+                    <h3>mio cugino franco u demolitore</h3>
                     <p>Ruolo: Project Manager</p>
-                    <p>Email: carlo.neri@example.com</p>
+                    <p>Email: bossSantiana@gmail.com</p>
                     <p>Telefono: +39 456 789 0123</p>
                 </div>
             </div>
