@@ -1,5 +1,4 @@
 /* CSS HOME */
-/* Reset default margin and padding */
 * {
     margin: 0;
     padding: 0;
@@ -22,6 +21,13 @@ nav {
     align-items: center; 
     padding: 20px;
     background-color: #181818;
+    position: fixed; /* Rende la navbar fissa */
+    top: 0;
+    left: 0;
+    width: 100%; /* Assicura che la navbar occupi tutta la larghezza */
+    background-color: #181818; /* Puoi cambiare il colore di sfondo a piacere */
+    z-index: 1000; /* Garantisce che la navbar sia sopra gli altri elementi */
+    padding: 10px 20px; /* Puoi aggiungere padding per la navbar */
 }
 
 nav .logo {
