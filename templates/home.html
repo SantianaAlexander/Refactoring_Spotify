@@ -14,7 +14,7 @@
             <button type="submit" class="search-btn">🔍</button>
         </form>
         <ul>
-            <li><a href="/#">About Us</a></li>
+            <li><a href="{{ url_for('aboutus.about_us') }}">About Us</a></li>
             {% if session['token_info'] %}
                 <li><a href="/playlist/{{ playlists['id'] }}">Le mie playlist</a></li>
                 <div class="profile-dropdown">
