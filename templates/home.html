@@ -9,6 +9,10 @@
     <body>
     <nav>
         <div class="logo">Spotify App</div>
+        <form class="search-form">
+            <input type="text" placeholder="Cerca playlist.." class="search-input">
+            <button type="submit" class="search-btn">🔍</button>
+        </form>
         <ul>
             <li><a href="/#">About Us</a></li>
             {% if session['token_info'] %}
@@ -29,10 +33,32 @@
             <h1>Benvenuto, {{ user_info["display_name"] }}!</h1>
             <p>Scopri la tua musica e le tue playlist preferite.</p>
             <a href="/playlist/{{ playlists['id'] }}" class="btn">Vai alle playlist</a>
+            <br>
+            {% if selected_playlist %}
+                <h2>Playlist selezionata:</h2>
+                <h3>{{ selected_playlist['name'] }}</h3>
+                <p>Di {{ selected_playlist['owner']['display_name'] }}</p>
+                <ul>
+                    {% for track in selected_playlist['tracks']['items'] %}
+                        <li>{{ track['track']['name'] }} - {{ track['track']['artists'][0]['name'] }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
         {% else %}
             <h1>Scopri la tua musica con Spotify</h1>
             <p>Accedi con Spotify per visualizzare le tue playlist e scoprire nuove canzoni!</p>
             <a href="{{ url_for('auth.login') }}" class="btn">Login con Spotify</a>
+            <br>
+            {% if selected_playlist %}
+                <h2>Playlist selezionata:</h2>
+                <h3>{{ selected_playlist['name'] }}</h3>
+                <p>Di {{ selected_playlist['owner']['display_name'] }}</p>
+                <ul>
+                    {% for track in selected_playlist['tracks']['items'] %}
+                        <li>{{ track['track']['name'] }} - {{ track['track']['artists'][0]['name'] }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
         {% endif %}
     </main>
     </body>

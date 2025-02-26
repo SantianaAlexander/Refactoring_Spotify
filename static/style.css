@@ -150,6 +150,35 @@ main .btn:hover {
     display: block;
 }
 
+/* Barra di ricerca centrata */
+.search-form {
+    flex-grow: 1; /* Occupa lo spazio tra logo e link */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.search-input {
+    border: none;
+    background: #222;
+    color: white;
+    outline: none;
+    padding: 8px 12px;
+    border-radius: 20px;
+    width: 200px;
+}
+
+.search-btn {
+    border: none;
+    background: none;
+    color: white;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 8px;
+}
+
+
+
 
 /* Responsive Design */
 @media (max-width: 768px) {
