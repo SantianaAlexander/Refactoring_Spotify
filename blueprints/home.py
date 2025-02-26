@@ -24,7 +24,7 @@ def get_user_playlists(user_id):
     playlists = sp.user_playlists(user_id)
     return playlists['items']
 
-@home_bp.route('/')
+@home_bp.route('/', methods=['GET', 'POST'])
 def home():
     sp = get_spotify_client()
     user_info = None
@@ -40,35 +40,64 @@ def home():
                 profile_pic_url = user_info["images"][0]["url"]
         except Exception:
             pass
+    search_results = []
+    query = ""
 
-    playlist_data = None
-    if selected_playlist:
-        playlist_data = sp.playlist(selected_playlist)
+    if request.method == "POST":
+        query = request.form.get("query", "").strip()
+        if query:
+            try:
+                
+                if not isinstance(sp, spotipy.Spotify):
+                    sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(
+                        client_id="af4cae999c184ad7b760fb8c51b60d60", 
+                        client_secret="9d1c008a6aaa4a969b178224406d5a73"  
+                    ))
+                
+                results = sp.search(q=query, type="playlist", limit=10)
+                search_results = [
+                    {
+                        "id": playlist["id"],
+                        "name": playlist.get("name", "Senza Nome"),
+                        "owner": playlist["owner"].get("display_name", "Sconosciuto"),
+                        "image": playlist["images"][0]["url"] if playlist.get("images") else None
+                    }
+                    for playlist in results.get("playlists", {}).get("items", [])
+                    if playlist
+                ]
+            except Exception as e:
+                print("Errore nella ricerca:", e)
 
-    return render_template('home.html', user_info=user_info, playlists=playlists, profile_pic_url=profile_pic_url, selected_playlist=playlist_data)
+    return render_template('home.html', user_info=user_info, playlists=playlists, profile_pic_url=profile_pic_url, query = query, search_results = search_results)
 
-@home_bp.route('/search', methods=['POST'])
-def search_playlist():
-    query = request.form.get('query')
-    if not query:
-        return redirect(url_for('home.home'))
 
+@home_bp.route('/playlist/<playlist_id>')
+def visualizza_playlist(playlist_id):
     sp = get_spotify_client()
-    results = sp.search(q=query, type='playlist', limit=5)
+    if not isinstance(sp, spotipy.Spotify):
+        sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(
+            client_id="af4cae999c184ad7b760fb8c51b60d60", 
+            client_secret="9d1c008a6aaa4a969b178224406d5a73"  
+    ))
 
-    search_results = results['playlists']['items'] if 'playlists' in results else []
-    
-    return render_template('home.html', search_results=search_results, user_info=session.get('user_info'), profile_pic_url=session.get('profile_pic_url'))
+    playlist_data, tracks = None, []
+    try:
+        playlist_data = sp.playlist(playlist_id)
+        tracks_data = playlist_data["tracks"]["items"]
 
+        tracks = [
+            {
+                "name": track["track"].get("name", "Senza Nome"),
+                "artist": track["track"]["artists"][0].get("name", "Sconosciuto"),
+                "album": track["track"]["album"].get("name", "Senza Nome"),
+                "cover": track["track"]["album"].get("images", [{}])[0].get("url", None)
+            }
+            for track in tracks_data if track.get("track")
+        ]
+    except Exception as e:
+        print("Errore nel recupero della playlist:", e)
 
-@home_bp.route('/select_playlist/<playlist_id>')
-def select_playlist(playlist_id):
-    session['selected_playlist'] = playlist_id  # Salva nella sessione
-    return redirect(url_for('home.home'))
-
-#@home_bp.route('/playlist/<playlist_id>')
-#def visualizza_playlist(playlist_id):
-    #sp = get_spotify_client()
+    return render_template("playlist.html", playlist=playlist_data, tracks=tracks)
     #token_info = session.get('token_info', None)
     #sp = spotipy.Spotify(auth=token_info['access_token'])
     #user_info = sp.current_user()
