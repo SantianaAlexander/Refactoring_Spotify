@@ -1,92 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="../static/style.css">
-        <title>Spotify API</title>
-        <style>
-            .imgPlaylist {
-                border-radius: 10px;
-                margin: 10px;
-            }
-            table {
-                width: 80%;
-                margin: 20px auto;
-                border-collapse: collapse;
-                background: #1e1e1e;
-                border-radius: 10px;
-                overflow: hidden;
-            }
-            table th, table td {
-                border: 1px solid #333;
-                padding: 15px;
-            }
-            table th {
-                background: #1DB954;
-                color: black;
-            }
-            table tr:nth-child(even) {
-                background: #242424;
-            }
-            table tr:hover {
-                background: #333;
-            }
-
-        </style>
-    </head>
-    <body>
-        <nav>
-            <div class="logo"><a href="{{ url_for('home.home') }}" style="color: inherit; text-decoration: none;">Spotify App</a></div>
-            <form class="search-form" action="{{ url_for('home.home') }}" method="POST">
-                <input type="text" name="query" placeholder="Cerca playlist..." class="search-input">
-                <button type="submit" class="search-btn">🔍</button>
-            </form>
-            <ul>
-                <li><a href="{{ url_for('aboutus.about_us') }}">About Us</a></li>
-                {% if session['token_info'] %}
-                    <li><a href="{{ url_for('playlist.playlist') }}">Le mie playlist</a></li>
-                    <div class="profile-dropdown">
-                        <img src="{{ profile_pic_url }}" class="profile-pic" alt="Profile Image">
-                        <div class="dropdown-menu">
-                            <a href="{{ url_for('auth.logout') }}">Logout</a>
-                        </div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/style.css">
+    <title>Spotify API - Le tue Playlist</title>
+    <style>
+        .imgPlaylist {
+            border-radius: 10px;
+            margin: 10px;
+        }
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: #1e1e1e;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        table th, table td {
+            border: 1px solid #333;
+            padding: 15px;
+        }
+        table th {
+            background: #1DB954;
+            color: black;
+        }
+        table tr:nth-child(even) {
+            background: #242424;
+        }
+        table tr:hover {
+            background: #333;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo"><a href="{{ url_for('home.home') }}" style="color: inherit; text-decoration: none;">Spotify App</a></div>
+        <form class="search-form" action="{{ url_for('home.home') }}" method="POST">
+            <input type="text" name="query" placeholder="Cerca playlist..." class="search-input">
+            <button type="submit" class="search-btn">🔍</button>
+        </form>
+        <ul>
+            <li><a href="{{ url_for('aboutus.about_us') }}">About Us</a></li>
+            {% if session['token_info'] %}
+                <li><a href="{{ url_for('playlist.playlist') }}">Le mie playlist</a></li>
+                <div class="profile-dropdown">
+                    <img src="{{ profile_pic_url }}" class="profile-pic" alt="Profile Image">
+                    <div class="dropdown-menu">
+                        <a href="{{ url_for('auth.logout') }}">Logout</a>
                     </div>
-                {% else %}
-                    <li><a href="{{ url_for('auth.login') }}" class="login-btn">Login con Spotify</a></li>
-                {% endif %}
-            </ul>
-        </nav>
-        <h2 style="padding-top: 80px; margin-left: 5px;">Le tue Playlist:</h2>
-        {% if playlists %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Nome Playlist</th>
-                    <th>Numero di Brani</th>
-                    <th>Copertina</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for playlist in playlists %}
+                </div>
+            {% else %}
+                <li><a href="{{ url_for('auth.login') }}" class="login-btn">Login con Spotify</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    <h2 style="padding-top: 80px; margin-left: 5px;">Le tue Playlist:</h2>
+    {% if playlists %}
+    <table>
+        <thead>
             <tr>
-                <td>{{ playlist['name'] }}</td>
-                <td>{{ playlist['tracks']['total'] }}</td>
-                <td>
-                {% if playlist['images'] %}
-                    <img class="imgPlaylist" src="{{ playlist['images'][0]['url'] }}" width="50" alt="Copertina playlist">
-                {% else %}
-                    Nessuna immagine
-                {% endif %}
-                </td>
-                <td><a href="/playlist/{{ playlist['id'] }}">Vedi Brani</a></td>
+                <th>Nome Playlist</th>
+                <th>Numero di Brani</th>
+                <th>Copertina</th>
+                <th></th>
             </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-            <p>Non hai playlist disponibili.</p>
-        {% endif %}
-    </body>
+        </thead>
+        <tbody>
+        {% for playlist in playlists %}
+        <tr>
+            <td>{{ playlist['name'] }}</td>
+            <td>{{ playlist['tracks']['total'] }}</td>
+            <td>
+            {% if playlist['images'] %}
+                <img class="imgPlaylist" src="{{ playlist['images'][0]['url'] }}" width="50" alt="Copertina playlist">
+            {% else %}
+                Nessuna immagine
+            {% endif %}
+            </td>
+            <td><a href="{{ url_for('playlist.playlist_details', playlist_id=playlist['id']) }}">Vedi Brani</a></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p>Non hai playlist disponibili.</p>
+    {% endif %}
+</body>
 </html>
