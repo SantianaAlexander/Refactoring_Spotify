@@ -42,4 +42,4 @@ def playlist_details(playlist_id):
     results = sp.playlist_tracks(playlist_id)  
     tracks = results['items'] 
 
-    return render_template('playlist_details.html', tracks=tracks)
+    return render_template('playlist_details.html', tracks=tracks, playlist=playlist)

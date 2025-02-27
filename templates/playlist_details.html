@@ -31,13 +31,29 @@
         </style>
     </head>
     <body>
+        <h1>TEST NAVBAR</h1>
+
         <nav>
-            <div class="logo-container">
-                <a href="{{ url_for('home.home') }}" class="logo-link">
-                    <img src="/static/images/home.jpg" alt="Spotify Logo" class="logo-image">
-                </a>
-            </div>
-           
+            <div class="logo"><a href="{{ url_for('home.home') }}" style="color: inherit; text-decoration: none;">Spotify App</a></div>
+            <form class="search-form" action="{{ url_for('home.home') }}" method="POST">
+                <input type="text" name="query" placeholder="Cerca playlist..." class="search-input">
+                <button type="submit" class="search-btn">🔍</button>
+            </form>
+            <ul>
+                <li><a href="{{ url_for('aboutus.about_us') }}">About Us</a></li>
+                {% if session['token_info'] %}
+                    <li><a href="{{ url_for('playlist.playlist') }}">Le mie playlist</a></li>
+                    <div class="profile-dropdown">
+                        <img src="{{ profile_pic_url }}" class="profile-pic" alt="Profile Image">
+                        <div class="dropdown-menu">
+                            <a href="{{ url_for('auth.logout') }}">Logout</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <li><a href="{{ url_for('auth.login') }}" class="login-btn">Login con Spotify</a></li>
+                {% endif %}
+            </ul>
+        </nav>
         <h2>Brani nella tua Playlist:</h2>
         {% if tracks %}
         <table>
