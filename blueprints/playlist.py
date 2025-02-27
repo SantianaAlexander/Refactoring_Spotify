@@ -41,5 +41,9 @@ def playlist_details(playlist_id):
     sp = get_spotify_client() 
     results = sp.playlist_tracks(playlist_id)  
     tracks = results['items'] 
+    profile_pic_url = None
+    user_info = sp.current_user()
+    if user_info.get("images"):
+        profile_pic_url = user_info["images"][0]["url"]
 
-    return render_template('playlist_details.html', tracks=tracks, playlist=playlist)
+    return render_template('playlist_details.html', tracks=tracks, playlist=playlist, profile_pic_url=profile_pic_url)
