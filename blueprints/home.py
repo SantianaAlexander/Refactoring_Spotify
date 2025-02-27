@@ -99,9 +99,9 @@ def visualizza_playlist(playlist_id):
         print("Errore nel recupero della playlist:", e)
 
     return render_template("playlist.html", playlist=playlist_data, tracks=tracks)
-    #token_info = session.get('token_info', None)
-    #sp = spotipy.Spotify(auth=token_info['access_token'])
-    #user_info = sp.current_user()
-    #brani_playlist = sp.playlist_items(playlist_id)
-    #brano_singolo = brani_playlist['items']
-    #return render_template('playlist.html', brani = brano_singolo, user_info = user_info)
+
+@home_bp.route("/public_playlist/<playlist_id>")
+def public_playlist_details(playlist_id):
+    sp = get_spotify_client()
+    tracks = sp.playlist_tracks(playlist_id)["items"]
+    return render_template("public_playlist_details.html", tracks=tracks)

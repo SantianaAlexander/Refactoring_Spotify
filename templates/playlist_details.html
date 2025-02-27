@@ -1,70 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../static/style.css">
-    <title>Spotify API - Dettagli Playlist</title>
-    <style>
-        table {
-            width: 80%;
-            margin: 20px auto;
-            border-collapse: collapse;
-            background: #1e1e1e;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        table th, table td {
-            border: 1px solid #333;
-            padding: 15px;
-        }
-        table th {
-            background: #1DB954;
-            color: black;
-        }
-        table tr:nth-child(even) {
-            background: #242424;
-        }
-        table tr:hover {
-            background: #333;
-        }
-    </style>
-</head>
-<body>
-    <h2>Brani nella tua Playlist:</h2>
-    {% if tracks %}
-    <table>
-        <thead>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="../static/style.css">
+        <title>Spotify API - Dettagli Playlist</title>
+        <style>
+            table {
+                width: 80%;
+                margin: 20px auto;
+                border-collapse: collapse;
+                background: #1e1e1e;
+                border-radius: 10px;
+                overflow: hidden;
+            }
+            table th, table td {
+                border: 1px solid #333;
+                padding: 15px;
+            }
+            table th {
+                background: #1DB954;
+                color: black;
+            }
+            table tr:nth-child(even) {
+                background: #242424;
+            }
+            table tr:hover {
+                background: #333;
+            }
+        </style>
+    </head>
+    <body>
+        <nav>
+            <div class="logo-container">
+                <a href="{{ url_for('home.home') }}" class="logo-link">
+                    <img src="/static/images/home.jpg" alt="Spotify Logo" class="logo-image">
+                </a>
+            </div>
+           
+        <h2>Brani nella tua Playlist:</h2>
+        {% if tracks %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome Brano</th>
+                    <th>Album</th>
+                    <th>Artista</th>
+                    <th>Copertina</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for brano in tracks %}
             <tr>
-                <th>Nome Brano</th>
-                <th>Album</th>
-                <th>Artista</th>
-                <th>Copertina</th>
+                <td>{{ brano['track']['name'] }}</td>
+                <td>{{ brano['track']['album']['name'] }}</td>
+                <td>
+                    {% for artist in brano['track']['artists'] %}
+                    {{ artist['name'] }}{% if not loop.last %}, {% endif %}
+                    {% endfor %}
+                </td>
+                <td>
+                {% if brano['track']['album']['images'] %}
+                    <img class="imgPlaylist" src="{{ brano['track']['album']['images'][0]['url'] }}" width="50" alt="Copertina album">
+                {% else %}
+                    Nessuna immagine
+                {% endif %}
+                </td>
             </tr>
-        </thead>
-        <tbody>
-        {% for brano in tracks %}
-        <tr>
-            <td>{{ brano['track']['name'] }}</td>
-            <td>{{ brano['track']['album']['name'] }}</td>
-            <td>
-                {% for artist in brano['track']['artists'] %}
-                {{ artist['name'] }}{% if not loop.last %}, {% endif %}
-                {% endfor %}
-            </td>
-            <td>
-            {% if brano['track']['album']['images'] %}
-                <img class="imgPlaylist" src="{{ brano['track']['album']['images'][0]['url'] }}" width="50" alt="Copertina album">
-            {% else %}
-                Nessuna immagine
-            {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-        <p>Non ci sono brani nella playlist.</p>
-    {% endif %}
-</body>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <p>Non ci sono brani nella playlist.</p>
+        {% endif %}
+    </body>
 </html>

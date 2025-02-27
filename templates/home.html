@@ -108,7 +108,7 @@
                                     Nessuna immagine
                                 {% endif %}
                             </td>
-                            <td><a href="{{ url_for('home.visualizza_playlist', playlist_id=playlist['id']) }}">Vedi Brani</a></td>
+                            <td><a href="{{ url_for('home.public_playlist_details', playlist_id=playlist['id']) }}">Vedi Brani</a></td>
                         </tr>
                         {% endfor %}
                     </tbody>
