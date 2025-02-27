@@ -31,7 +31,6 @@
         </style>
     </head>
     <body>
-        <h1>TEST NAVBAR</h1>
 
         <nav>
             <div class="logo"><a href="{{ url_for('home.home') }}" style="color: inherit; text-decoration: none;">Spotify App</a></div>
@@ -54,7 +53,7 @@
                 {% endif %}
             </ul>
         </nav>
-        <h2>Brani nella tua Playlist:</h2>
+        <h2 style="padding-top: 70px; display: flex; justify-content: center;">Brani nella tua Playlist:</h2>
         {% if tracks %}
         <table>
             <thead>

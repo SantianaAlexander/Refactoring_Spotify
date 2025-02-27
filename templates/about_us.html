@@ -93,12 +93,10 @@
                 <img src="/static/images/bnt.jpg" alt="Spotify Logo" class="logo-image">
             </a>
         </div>
-        <div class="search-container">
+        <form class="search-form" action="{{ url_for('home.home') }}" method="POST">
             <input type="text" name="query" placeholder="Cerca playlist..." class="search-input">
-            <button type="submit" class="search-btn">
-                <img src="/static/images/lente.jpg" alt="Search" class="search-icon">
-            </button>
-        </div>
+            <button type="submit" class="search-btn">🔍</button>
+        </form>
         <ul>
             <li><a href="{{ url_for('aboutus.about_us') }}">About Us</a></li>
             {% if session['token_info'] %}

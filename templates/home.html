@@ -42,11 +42,10 @@
                     <img src="/static/images/home.jpg" alt="Spotify Logo" class="logo-image">
                 </a>
             </div>
-            <form class="search-form" action="{{ url_for('home.home') }}" method="POST"> 
-                <div class="search-container">
-                    <input type="text" name="query" placeholder="Cerca playlist..." class="search-input">
-                    <button type="submit" class="search-btn"><img src="/static/images/lente.jpg" alt="Spotify Logo" class="logo-image"></button>
-                </form>
+            <form class="search-form" action="{{ url_for('home.home') }}" method="POST">
+                <input type="text" name="query" placeholder="Cerca playlist..." class="search-input">
+                <button type="submit" class="search-btn">🔍</button>
+            </form>
             <ul>
                 <li><a href="{{ url_for('aboutus.about_us') }}">About Us</a></li>
                 {% if session['token_info'] %}
@@ -86,7 +85,7 @@
             {% endif %}
 
             {% if query %}
-                <h2>Risultati per: "{{ query }}"</h2>
+                <h2 style="padding-top: 5px;">Risultati per: "{{ query }}"</h2>
                 <table>
                     <thead>
                         <tr>
