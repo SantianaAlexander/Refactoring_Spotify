@@ -6,7 +6,35 @@
         <link rel="stylesheet" href="../static/style.css">
         <title>Spotify API</title>
     </head>
-    
+    <body>
+        <style>
+            .imgPlaylist {
+                border-radius: 10px;
+                margin: 10px;
+            }
+            table {
+                width: 80%;
+                margin: 20px auto;
+                border-collapse: collapse;
+                background: #1e1e1e;
+                border-radius: 10px;
+                overflow: hidden;
+            }
+            table th, table td {
+                border: 1px solid #333;
+                padding: 15px;
+            }
+            table th {
+                background: #1DB954;
+                color: black;
+            }
+            table tr:nth-child(even) {
+                background: #242424;
+            }
+            table tr:hover {
+                background: #333;
+            }
+        </style>
         <!-- NAVBAR -->
         <nav>
             <div class="logo-container">
@@ -14,12 +42,11 @@
                     <img src="/static/images/home.jpg" alt="Spotify Logo" class="logo-image">
                 </a>
             </div>
-            <div class="search-container">
-                <input type="text" name="query" placeholder="Cerca playlist..." class="search-input">
-                <button type="submit" class="search-btn">
-                    <img src="/static/images/lente.jpg" alt="Search" class="search-icon">
-                </button>
-            </div>
+            <form class="search-form" action="{{ url_for('home.home') }}" method="POST"> 
+                <div class="search-container">
+                    <input type="text" name="query" placeholder="Cerca playlist..." class="search-input">
+                    <button type="submit" class="search-btn"><img src="/static/images/lente.jpg" alt="Spotify Logo" class="logo-image"></button>
+                </form>
             <ul>
                 <li><a href="{{ url_for('aboutus.about_us') }}">About Us</a></li>
                 {% if session['token_info'] %}
@@ -60,18 +87,32 @@
 
             {% if query %}
                 <h2>Risultati per: "{{ query }}"</h2>
-                <ul>
-                    {% for playlist in search_results %}
-                        <li>
-                            <a href="{{ url_for('home.visualizza_playlist', playlist_id=playlist['id']) }}">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome Playlist</th>
+                            <th>Numero di Brani</th>
+                            <th>Copertina</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for playlist in search_results %}
+                        <tr>
+                            <td>{{ playlist.name }}</td>
+                            <td>{{ playlist.track_count }}</td>
+                            <td>
                                 {% if playlist.image %}
-                                    <img src="{{ playlist.image }}" alt="Cover" width="50">
+                                    <img class="imgPlaylist" src="{{ playlist.image }}" width="50" alt="Copertina playlist">
+                                {% else %}
+                                    Nessuna immagine
                                 {% endif %}
-                                {{ playlist.name }} - di {{ playlist.owner }}
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
+                            </td>
+                            <td><a href="{{ url_for('home.visualizza_playlist', playlist_id=playlist['id']) }}">Vedi Brani</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             {% endif %}
         </main>
     </body>

@@ -60,7 +60,8 @@ def home():
                         "id": playlist["id"],
                         "name": playlist.get("name", "Senza Nome"),
                         "owner": playlist["owner"].get("display_name", "Sconosciuto"),
-                        "image": playlist["images"][0]["url"] if playlist.get("images") else None
+                        "image": playlist["images"][0]["url"] if playlist.get("images") else None,
+                        "track_count": playlist["tracks"]["total"]
                     }
                     for playlist in results.get("playlists", {}).get("items", [])
                     if playlist
