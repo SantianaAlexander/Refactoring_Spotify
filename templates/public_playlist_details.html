@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../static/style.css">
+    <link rel="stylesheet" href="../static/navbar.css">
     <title>Brani della Playlist</title>
     <style>
         table {
@@ -31,29 +32,33 @@
     </style>
 </head>
 <body>
-    <nav>
-        <div class="logo-container">
-            <a href="{{ url_for('home.home') }}" class="logo-link">
-                <img src="/static/images/home.jpg" alt="Spotify Logo" class="logo-image">
-            </a>
-        </div>
-        <form class="search-form" action="{{ url_for('home.home') }}" method="POST"> 
-            <div class="search-container">
-                <input type="text" name="query" placeholder="Cerca playlist..." class="search-input">
-                <button type="submit" class="search-btn"><img src="/static/images/lente.jpg" alt="Spotify Logo" class="logo-image"></button>
-            </form>
-        <ul>
-            <li><a href="{{ url_for('aboutus.about_us') }}">About Us</a></li>
+    <nav class="navbar">
+        <a href="{{ url_for('home.home') }}" class="home-btn">
+            <img src="/static/images/homeLogo.png" alt="Home" class="home-image">
+        </a>
+        <form class="search-form" action="{{ url_for('home.home') }}" method="POST">
+            <input type="text" name="query" placeholder="Cerca playlist..." class="search-input">
+            <button type="submit" class="search-btn">
+                <img src="/static/images/searchLogo.png" alt="Cerca" class="search-icon">
+            </button>
+        </form>
+        
+        <ul class="nav-links">
+            <li class="link"><a href="{{ url_for('aboutus.about_us') }}">About Us</a></li>
             {% if session['token_info'] %}
-                <li><a href="{{ url_for('playlist.playlist') }}">Le mie playlist</a></li>
-                <div class="profile-dropdown">
+                <li class="link"><a href="{{ url_for('playlist.playlist') }}">Le mie playlist</a></li>
+                <li class="profile-dropdown">
                     <img src="{{ profile_pic_url }}" class="profile-pic" alt="Profile Image">
                     <div class="dropdown-menu">
-                        <a href="{{ url_for('auth.logout') }}">Logout</a>
+                        <a href="{{ url_for('spotify.spotify_login') }}">Logout</a>
                     </div>
-                </div>
+                </li>
             {% else %}
-                <li><a href="{{ url_for('auth.login') }}" class="login-btn">Login con Spotify</a></li>
+                <li class="linkimg">
+                    <a href="{{ url_for('spotify.spotify_login') }}" class="login-btn">
+                        <img src="/static/images/SpotifyLogo.png" alt="Login con Spotify" class="login-image">
+                    </a>
+                </li>
             {% endif %}
         </ul>
     </nav>
