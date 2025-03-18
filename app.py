@@ -9,6 +9,17 @@ import plotly.express as px
 import plotly.graph_objects as go
 from collections import Counter
 
+from flask_sqlalchemy import SQLAlchemy
+app = Flask(__name__)
+#configurazione db
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///spotipy.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+#inizializza SQLAlchemy
+db.init_app(app)
+#crea il database se non esiste
+with app.app_context(): 
+    db.create_all()
+
 app = Flask(__name__)
 app.secret_key = "chiavesessione"
 
@@ -18,6 +29,7 @@ app.register_blueprint(aboutus_bp)
 app.register_blueprint(playlist_bp)
 
 if __name__ == "__main__":
+
     app.run(debug = True, port=5001)
 
 
