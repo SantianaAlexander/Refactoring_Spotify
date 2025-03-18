@@ -1,0 +1,57 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #181818;
+    padding: 10px 20px;
+}
+.logo-container img {
+    width: 50px;
+    height: auto;
+}
+.search-form {
+    display: flex;
+    align-items: center;
+}
+.search-input {
+    padding: 5px;
+    border-radius: 5px;
+    border: none;
+}
+.search-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 20px;
+    align-items: center;
+}
+.profile-dropdown {
+    position: relative;
+}
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: #333;
+    padding: 10px;
+    border-radius: 5px;
+}
+.profile-dropdown:hover .dropdown-menu {
+    display: block;
+}
+.login-image {
+    width: 40px;
+    transition: transform 0.3s ease;
+}
+.login-btn:hover .login-image {
+    transform: scale(1.1);
+}

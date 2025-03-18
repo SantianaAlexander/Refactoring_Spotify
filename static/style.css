@@ -131,6 +131,16 @@ nav .login-btn:hover, nav .signup-btn:hover {
     background-color: #fefefe;
     color: black;
 }
+.login-image {
+    width: 50px;
+    height: auto;
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.login-btn:hover .login-image {
+    transform: scale(1.1); /* Effetto zoom */
+    filter: brightness(1.2); /* Effetto luce */
+}
 
 
 .logo-container {

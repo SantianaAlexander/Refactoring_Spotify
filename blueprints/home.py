@@ -24,7 +24,7 @@ def get_user_playlists(user_id):
     playlists = sp.user_playlists(user_id)
     return playlists['items']
 
-@home_bp.route('/', methods=['GET', 'POST'])
+@home_bp.route('/home', methods=['GET', 'POST'])
 def home():
     sp = get_spotify_client()
     user_info = None

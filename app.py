@@ -1,39 +1,53 @@
-from flask import Flask
+from flask import Flask, redirect, url_for
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
+from flask_bcrypt import Bcrypt
+
+from services.models import db, User
 from blueprints.auth import auth_bp
 from blueprints.home import home_bp
 from blueprints.about_us import aboutus_bp
 from blueprints.playlist import playlist_bp
+from blueprints.spotify import spotify_bp
 
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from collections import Counter
 
-from flask_sqlalchemy import SQLAlchemy
-app = Flask(__name__)
-#configurazione db
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///spotipy.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-#inizializza SQLAlchemy
-db.init_app(app)
-#crea il database se non esiste
-with app.app_context(): 
-    db.create_all()
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///spotipy.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = "chiavesessione"
+
+db.init_app(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'auth.login'
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+with app.app_context():
+    db.create_all()
 
 app.register_blueprint(auth_bp)
 app.register_blueprint(home_bp)
 app.register_blueprint(aboutus_bp)
 app.register_blueprint(playlist_bp)
+app.register_blueprint(spotify_bp)
+
+@app.route('/')
+def index():
+    return redirect(url_for('auth.login'))
 
 if __name__ == "__main__":
-
     app.run(debug = True, port=5001)
 
 
-   """ tracks = [
+""" tracks = [
     {
         'track': {
             'name': 'Song 1',
@@ -67,3 +81,5 @@ for brano in tracks:
         })
 
 df = pd.DataFrame(data)
+
+"""
