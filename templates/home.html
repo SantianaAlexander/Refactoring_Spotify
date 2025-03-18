@@ -38,21 +38,20 @@
         </style>
         <!-- NAVBAR -->
         <nav class="navbar">
-            <div class="logo-container">
-                <a href="{{ url_for('home.home') }}" class="logo-link">
-                    <img src="/static/images/home.jpg" alt="Spotify Logo" class="logo-image">
-                </a>
-            </div>
-            
+            <a href="{{ url_for('home.home') }}" class="home-btn">
+                <img src="/static/images/homeLogo.png" alt="Home" class="home-image">
+            </a>
             <form class="search-form" action="{{ url_for('home.home') }}" method="POST">
                 <input type="text" name="query" placeholder="Cerca playlist..." class="search-input">
-                <button type="submit" class="search-btn">🔍</button>
+                <button type="submit" class="search-btn">
+                    <img src="/static/images/searchLogo.png" alt="Cerca" class="search-icon">
+                </button>
             </form>
             
             <ul class="nav-links">
-                <li><a href="{{ url_for('aboutus.about_us') }}">About Us</a></li>
+                <li class="link"><a href="{{ url_for('aboutus.about_us') }}">About Us</a></li>
                 {% if session['token_info'] %}
-                    <li><a href="{{ url_for('playlist.playlist') }}">Le mie playlist</a></li>
+                    <li class="link"><a href="{{ url_for('playlist.playlist') }}">Le mie playlist</a></li>
                     <li class="profile-dropdown">
                         <img src="{{ profile_pic_url }}" class="profile-pic" alt="Profile Image">
                         <div class="dropdown-menu">
@@ -60,7 +59,7 @@
                         </div>
                     </li>
                 {% else %}
-                    <li>
+                    <li class="linkimg">
                         <a href="{{ url_for('spotify.spotify_login') }}" class="login-btn">
                             <img src="/static/images/SpotifyLogo.png" alt="Login con Spotify" class="login-image">
                         </a>

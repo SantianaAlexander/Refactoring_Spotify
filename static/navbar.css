@@ -5,10 +5,96 @@
     background-color: #181818;
     padding: 10px 20px;
 }
-.logo-container img {
-    width: 50px;
-    height: auto;
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #181818;
+    padding: 10px 20px;
 }
+
+/* Stile della lista dei link */
+nav ul li {
+    list-style: none;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+/* Stile dei link */
+nav ul li a {
+    text-decoration: none;  /* Rimuove la sottolineatura */
+    color: white;           /* Cambia il colore del testo */
+    font-size: 16px;
+    padding: 8px 12px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Effetto hover per i link di testo */
+nav ul li a {
+    text-decoration: none;  /* Rimuove la sottolineatura */
+    color: white;           /* Colore del testo normale */
+    font-size: 16px;
+    padding: 8px 12px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.link {
+    text-decoration: none;  /* Rimuove la sottolineatura */
+    color: white;           /* Colore del testo normale */
+    font-size: 16px;
+    padding: 8px 12px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Effetto hover per i link di testo */
+.link:hover {
+    background-color: #1DB954;  /* Verde Spotify */
+    color: black; /* Cambia il colore del testo */
+}
+
+/* Separazione dell'effetto hover per l'immagine di Spotify */
+.login-btn img {
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Solo ingrandimento per l'immagine di Spotify, senza l'effetto di evidenziatura */
+.login-btn:hover img {
+    transform: scale(1.1); /* Ingrandisce solo l'immagine di Spotify */
+}
+
+/* Evitiamo l'effetto hover per il link intero che contiene l'immagine */
+.login-btn {
+    display: inline-block;
+}
+
+.home-btn img {
+    width: 30px; /* Imposta una larghezza fissa per l'immagine */
+    height: auto; /* Mantiene il rapporto di aspetto originale */
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Solo ingrandimento per l'immagine al passaggio del mouse */
+.home-btn:hover img {
+    transform: scale(1.1);
+}
+
+/* Evitiamo l'effetto hover per il link intero che contiene l'immagine */
+.home-btn {
+    display: inline-block;
+}
+
+/* Effetto hover per le altre immagini nei link (non applicato) */
+nav ul li a img {
+    transition: none;
+}
+
+
+
+
 .search-form {
     display: flex;
     align-items: center;
@@ -17,11 +103,24 @@
     padding: 5px;
     border-radius: 5px;
     border: none;
+    width: 250px;
 }
 .search-btn {
     background: none;
     border: none;
+    padding: 10px; /* Aggiungi un po' di padding per creare spazio attorno all'immagine */
     cursor: pointer;
+}
+
+/* Stile per l'immagine all'interno del bottone della ricerca */
+.search-btn img {
+    width: 25px; /* Imposta la larghezza dell'immagine */
+    height: auto; /* Mantieni il rapporto di aspetto */
+    transition: transform 0.2s ease-in-out; /* Transizione per l'effetto hover */
+}
+/* Effetto hover per l'immagine del bottone */
+.search-btn img:hover {
+    transform: scale(1.1); /* Ingrandisce l'immagine al passaggio del mouse */
 }
 .nav-links {
     display: flex;
@@ -50,7 +149,12 @@
 }
 .login-image {
     width: 40px;
-    transition: transform 0.3s ease;
+    height: auto;
+    transition: transform 0.2s ease-in-out;
+}
+
+.login-image:hover {
+    transform: scale(1.1);
 }
 .login-btn:hover .login-image {
     transform: scale(1.1);
