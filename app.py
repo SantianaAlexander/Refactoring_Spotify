@@ -1,6 +1,6 @@
-from flask import Flask, redirect, url_for
+from flask import Flask, redirect, url_for, render_template
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
 from flask_bcrypt import Bcrypt
 
 from services.models import db, User
@@ -42,6 +42,10 @@ app.register_blueprint(spotify_bp)
 @app.route('/')
 def index():
     return redirect(url_for('auth.login'))
+
+@app.route('/area')
+def area_personale():
+    return render_template('area_personale.html', username=current_user.username)
 
 if __name__ == "__main__":
     app.run(debug = True, port=5002)

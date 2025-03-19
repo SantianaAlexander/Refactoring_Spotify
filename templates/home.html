@@ -11,11 +11,12 @@
         <style>
         .btn {
             text-decoration: none;
-            color: white;
+            color: #1ed760;
             padding: 10px 20px;
             border-radius: 5px;
             border: 2px solid;
-            transition: transform 0.2s ease-in-out; 
+            transition: transform 0.2s ease-in-out;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); 
         }
         .btn:hover {
             transform: scale(1.1); 
@@ -62,27 +63,26 @@
             
             <ul class="nav-links">
                 <li class="link"><a href="{{ url_for('aboutus.about_us') }}">About Us</a></li>
-                {% if session['token_info'] %}
-                    <li class="link"><a href="{{ url_for('playlist.playlist') }}">Le mie playlist</a></li>
-                    <li class="profile-dropdown">
-                        <img src="{{ profile_pic_url }}" class="profile-pic" alt="Profile Image">
-                        <div class="dropdown-menu">
-                            <a href="{{ url_for('spotify.spotify_logout') }}">Disconnetti</a>
-                        </div>
-                    </li>
-                {% else %}
-                    <li class="linkimg">
-                        <a href="{{ url_for('spotify.spotify_login') }}" class="login-btn">
-                            <img src="/static/images/SpotifyLogo.png" alt="Login con Spotify" class="login-image">
-                        </a>
-                    </li>
+                {% if current_user.is_authenticated %}
+                <li class="link"><a href="{{url_for('auth.logout')}}">Logout</a></li>
                 {% endif %}
             </ul>
         </nav>
         <div class="bg-container">
             <main class="pt-5">
+                <h1 style="text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);">
+                    {% if current_user.is_authenticated %}
+                        Benvenuto, {{ current_user.username }}!
+                    {% else %}
+                        Benvenuto, ospite!
+                    {% endif %}
+                </h1>
+        
+                {% if 'token_info' in session %}
+                    <a href="{{ url_for('spotify.spotify_logout') }}" class="btn">Logout Spotify</a>
+                {% endif %}
+                <br>
                 {% if session['token_info'] %}
-                    <h1 style="text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);">Benvenuto, {{ user_info["display_name"] }}!</h1>
                     <p style="text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);">Scopri la tua musica e le tue playlist preferite.</p>
                     <a href="{{ url_for('playlist.playlist') }}" class="btn" style="text-decoration: none; color: white;">Vai alle mie playlist</a>
                     <br>
@@ -97,9 +97,9 @@
                         </ul>
                     {% endif %}
                 {% else %}
-                    <h1>Scopri la tua musica con Spotify</h1>
-                    <p>Accedi con Spotify per visualizzare le tue playlist e scoprire nuove canzoni!</p>
-                    <a href="{{ url_for('auth.login') }}" class="btn">Login con Spotify</a>
+                    <h1 style="text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);">Scopri la tua musica con Spotify</h1>
+                    <p style="text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);">Accedi con Spotify per visualizzare le tue playlist e scoprire nuove canzoni!</p>
+                    <a href="{{ url_for('spotify.spotify_login') }}" class="btn">Login con Spotify</a>
                 {% endif %}
 
                 {% if query %}

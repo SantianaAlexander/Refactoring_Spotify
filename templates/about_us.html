@@ -285,22 +285,20 @@ body {
             
             <ul class="nav-links">
                 <li class="link"><a href="{{ url_for('aboutus.about_us') }}">About Us</a></li>
-                {% if session['token_info'] %}
-                    <li class="link"><a href="{{ url_for('playlist.playlist') }}">Le mie playlist</a></li>
-                    <li class="profile-dropdown">
-                        <img src="{{ profile_pic_url }}" class="profile-pic" alt="Profile Image">
-                        <div class="dropdown-menu">
-                            <a href="{{ url_for('spotify.spotify_logout') }}">Disconnetti</a>
-                        </div>
-                    </li>
-                {% else %}
-                    <li class="linkimg">
-                        <a href="{{ url_for('spotify.spotify_login') }}" class="login-btn">
-                            <img src="/static/images/SpotifyLogo.png" alt="Login con Spotify" class="login-image">
-                        </a>
-                    </li>
+                {% if current_user.is_authenticated %}
+                <li class="link"><a href="{{url_for('auth.logout')}}">Logout</a></li>
                 {% endif %}
+            
+            {% if session['token_info'] %}
+                <li class="link"><a href="{{url_for('playlist.playlist')}}">Le mie playlist</a></li>
+                <li class="profile-dropdown">
+                    <img src="../static/images/SpotifyLogo.png" class="profile-pic" alt="Profile Image">
+                    <div class="dropdown-menu">
+                        <a href="{{ url_for('spotify.spotify_logout') }}">Disconnetti</a>
+                    </div>
+                </li>
             </ul>
+            {% endif %}
         </nav>
 
         <!-- SEZIONE ABOUT US -->

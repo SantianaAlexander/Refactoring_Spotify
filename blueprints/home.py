@@ -1,6 +1,7 @@
 from flask import Blueprint, redirect, request, url_for, session, render_template
 from services.spotify_oauth import sp_oauth, get_spotify_object
 from services.spotify_client import get_spotify_client
+from flask_login import login_required, current_user
 
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
@@ -69,7 +70,7 @@ def home():
             except Exception as e:
                 print("Errore nella ricerca:", e)
 
-    return render_template('home.html', user_info=user_info, playlists=playlists, profile_pic_url=profile_pic_url, query = query, search_results = search_results)
+    return render_template('home.html', user_info=user_info, playlists=playlists, profile_pic_url=profile_pic_url, query = query, search_results = search_results, username=current_user.username)
 
 
 @home_bp.route('/playlist/<playlist_id>')
