@@ -12,18 +12,14 @@
 
 <!-- CSS -->
 <style>
-    body {
+   body {
     font-family: Arial, sans-serif;
     background-color: #121212;
     color: white;
     margin: 0;
     padding: 0;
-    }   
-    .mainAbout {
-    padding: 50px 0;
-    text-align: center;
-    padding-top: 100px;
-    }
+} 
+    
 
     .h1About {
     color: #1DB954;
@@ -83,88 +79,276 @@
         font-size: 1rem;
         margin: 5px 0;
     }
+    .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #181818;
+    padding: 10px 20px;
+}
+nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #181818;
+    padding: 10px 20px;
+}
+
+nav ul li {
+    list-style: none;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+nav ul li a {
+    text-decoration: none;  
+    color: white;         
+    font-size: 16px;
+    padding: 8px 12px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+nav ul li a {
+    text-decoration: none; 
+    color: white;          
+    font-size: 16px;
+    padding: 8px 12px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.link {
+    text-decoration: none; 
+    color: white;          
+    font-size: 16px;
+    padding: 8px 12px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.link:hover {
+    background-color: #1DB954; 
+    color: black; 
+}
+
+.login-btn img {
+    transition: transform 0.2s ease-in-out;
+}
+
+.login-btn:hover img {
+    transform: scale(1.1); 
+}
+
+.login-btn {
+    display: inline-block;
+}
+
+.home-btn img {
+    width: 30px; 
+    height: auto;
+    transition: transform 0.2s ease-in-out;
+}
+
+.home-btn:hover img {
+    transform: scale(1.1);
+}
+
+.home-btn {
+    display: inline-block;
+}
+
+nav ul li a img {
+    transition: none;
+}
+
+
+
+
+.search-form {
+    display: flex;
+    align-items: center;
+}
+.search-input {
+    padding: 5px;
+    border-radius: 5px;
+    border: none;
+    width: 250px;
+}
+.search-btn {
+    background: none;
+    border: none;
+    padding: 10px; 
+    cursor: pointer;
+}
+
+.search-btn img {
+    width: 25px;
+    height: auto; 
+    transition: transform 0.2s ease-in-out; 
+}
+.search-btn img:hover {
+    transform: scale(1.1); 
+}
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 20px;
+    align-items: center;
+}
+.profile-dropdown {
+    position: relative;
+}
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+.profile-dropdown {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.profile-dropdown .profile-pic {
+    width: 40px; 
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.profile-dropdown:hover .dropdown-menu,
+.dropdown-menu:hover {
+    display: block;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 110%; 
+    left: 50%;
+    transform: translateX(-50%); 
+    background-color: #121212;
+    padding: 5px 8px; 
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    display: none;
+    white-space: nowrap; 
+    z-index: 1000;
+}
+
+.profile-dropdown:hover .dropdown-menu {
+    display: block; 
+}
+
+.dropdown-menu a {
+    font-size: 11px; /* Rimpicciolito il testo */
+    padding: 4px 6px; /* Ridotto lo spazio interno */
+    display: block;
+    text-decoration: none;
+    color: white;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+
+.login-image {
+    width: 40px;
+    height: auto;
+    transition: transform 0.2s ease-in-out;
+}
+
+.login-image:hover {
+    transform: scale(1.1);
+}
+.login-btn:hover .login-image {
+    transform: scale(1.1);
+}
 </style>
 
 <!-- BODY -->
-<body>
-    <!-- NAVBAR -->
-    <nav class="navbar">
-        <a href="{{ url_for('home.home') }}" class="home-btn">
-            <img src="/static/images/homeLogo.png" alt="Home" class="home-image">
-        </a>
-        <form class="search-form" action="{{ url_for('home.home') }}" method="POST">
-            <input type="text" name="query" placeholder="Cerca playlist..." class="search-input">
-            <button type="submit" class="search-btn">
-                <img src="/static/images/searchLogo.png" alt="Cerca" class="search-icon">
-            </button>
-        </form>
-        
-        <ul class="nav-links">
-            <li class="link"><a href="{{ url_for('aboutus.about_us') }}">About Us</a></li>
-            {% if session['token_info'] %}
-                <li class="link"><a href="{{ url_for('playlist.playlist') }}">Le mie playlist</a></li>
-                <li class="profile-dropdown">
-                    <img src="{{ profile_pic_url }}" class="profile-pic" alt="Profile Image">
-                    <div class="dropdown-menu">
-                        <a href="{{ url_for('spotify.spotify_login') }}">Logout</a>
-                    </div>
-                </li>
-            {% else %}
-                <li class="linkimg">
-                    <a href="{{ url_for('spotify.spotify_login') }}" class="login-btn">
-                        <img src="/static/images/SpotifyLogo.png" alt="Login con Spotify" class="login-image">
-                    </a>
-                </li>
-            {% endif %}
-        </ul>
-    </nav>
+    <body>
+        <!-- NAVBAR -->
+        <nav class="navbar">
+            <a href="{{ url_for('home.home') }}" class="home-btn">
+                <img src="/static/images/homeLogo.png" alt="Home" class="home-image">
+            </a>
+            <form class="search-form" action="{{ url_for('home.home') }}" method="POST">
+                <input type="text" name="query" placeholder="Cerca playlist..." class="search-input">
+                <button type="submit" class="search-btn">
+                    <img src="/static/images/searchLogo.png" alt="Cerca" class="search-icon">
+                </button>
+            </form>
+            
+            <ul class="nav-links">
+                <li class="link"><a href="{{ url_for('aboutus.about_us') }}">About Us</a></li>
+                {% if session['token_info'] %}
+                    <li class="link"><a href="{{ url_for('playlist.playlist') }}">Le mie playlist</a></li>
+                    <li class="profile-dropdown">
+                        <img src="{{ profile_pic_url }}" class="profile-pic" alt="Profile Image">
+                        <div class="dropdown-menu">
+                            <a href="{{ url_for('spotify.spotify_logout') }}">Disconnetti</a>
+                        </div>
+                    </li>
+                {% else %}
+                    <li class="linkimg">
+                        <a href="{{ url_for('spotify.spotify_login') }}" class="login-btn">
+                            <img src="/static/images/SpotifyLogo.png" alt="Login con Spotify" class="login-image">
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
 
-    <!-- SEZIONE ABOUT US -->
-    <main class="container text-center mb-5 mainAbout">
-        <h1 class="h1About">ti presneto a me squattra</h1>
-        <p>Siamo un team di quattro appassionati di tecnologia, musica e sviluppo software, 
-            uniti dalla voglia di creare esperienze uniche attraverso il nostro progetto basato sull'API di Spotify. 
-            Ogni membro porta con sé competenze diverse, rendendo il nostro team equilibrato e dinamico.</p>
-        <div class="row justify-content-center mt-4">
-            <div class="col-md-6 col-sm-6">
-                <div class="team-member">
-                    <img src="../static/images/tinto.jpg" alt="">
-                    <h3>me compare oh mammut</h3>
-                    <p>Ruolo 🔥 :Il Problem Solver & Frontend Developer</p>
-                    <p>Email: tintoriccardo@gmail.com</p>
-                    <p>Telefono: +39 123 456 7890</p>
+        <!-- SEZIONE ABOUT US -->
+        <main class="container text-center mb-5 mainAbout">
+            <h1 class="h1About">ti presneto a me squattra</h1>
+            <p>Siamo un team di quattro appassionati di tecnologia, musica e sviluppo software, 
+                uniti dalla voglia di creare esperienze uniche attraverso il nostro progetto basato sull'API di Spotify. 
+                Ogni membro porta con sé competenze diverse, rendendo il nostro team equilibrato e dinamico.</p>
+            <div class="row justify-content-center mt-4">
+                <div class="col-md-6 col-sm-6">
+                    <div class="team-member">
+                        <img src="../static/images/tinto.jpg" alt="">
+                        <h3>me compare oh mammut</h3>
+                        <p>Ruolo 🔥 :Il Problem Solver & Frontend Developer</p>
+                        <p>Email: tintoriccardo@gmail.com</p>
+                        <p>Telefono: +39 123 456 7890</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6">
+                    <div class="team-member">
+                        <img src="../static/images/maneth.jpg" alt="Luigi Verdi">
+                        <h3>u trichecu</h3>
+                        <p>Ruolo 🛠 :Il Full Stack & API Guru</p>
+                        <p>Email: manethwjacne@gmail.com</p>
+                        <p>Telefono: +39 234 567 8901</p>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6 col-sm-6">
-                <div class="team-member">
-                    <img src="../static/images/maneth.jpg" alt="Luigi Verdi">
-                    <h3>u trichecu</h3>
-                    <p>Ruolo 🛠 :Il Full Stack & API Guru</p>
-                    <p>Email: manethwjacne@gmail.com</p>
-                    <p>Telefono: +39 234 567 8901</p>
+            <div class="row justify-content-center mt-4">
+                <div class="col-md-6 col-sm-6">
+                    <div class="team-member">
+                        <img src="../static/images/Biello.png" alt="Giovanna Bianchi">
+                        <h3>u signor napoli</h3>
+                        <p>Ruolo 🎧 : L’Esperto di Musica & UX Designer</p>
+                        <p>Email: Biellomipiaccionolebananonenere@gmail.com</p>
+                        <p>Telefono: +39 345 678 9012</p>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6">
+                    <div class="team-member">
+                        <img src="../static/images/Santi.jpg" alt="Carlo Neri">
+                        <h3>mio cugino franco u demolitore</h3>
+                        <p>Ruolo 🎵 :Il Visionario & Developerr</p>
+                        <p>Email: bossSantiana@gmail.com</p>
+                        <p>Telefono: +39 456 789 0123</p>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="row justify-content-center mt-4">
-            <div class="col-md-6 col-sm-6">
-                <div class="team-member">
-                    <img src="../static/images/Biello.png" alt="Giovanna Bianchi">
-                    <h3>u signor napoli</h3>
-                    <p>Ruolo 🎧 : L’Esperto di Musica & UX Designer</p>
-                    <p>Email: Biellomipiaccionolebananonenere@gmail.com</p>
-                    <p>Telefono: +39 345 678 9012</p>
-                </div>
-            </div>
-            <div class="col-md-6 col-sm-6">
-                <div class="team-member">
-                    <img src="../static/images/Santi.jpg" alt="Carlo Neri">
-                    <h3>mio cugino franco u demolitore</h3>
-                    <p>Ruolo 🎵 :Il Visionario & Developerr</p>
-                    <p>Email: bossSantiana@gmail.com</p>
-                    <p>Telefono: +39 456 789 0123</p>
-                </div>
-            </div>
-        </div>
-    </main>
-</body>
+        </main>
+    </body>
 </html>
