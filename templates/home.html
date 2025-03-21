@@ -62,7 +62,7 @@
             </form>
             
             <ul class="nav-links">
-                <li class="link"><a href="{{ url_for('aboutus.about_us') }}">About Us</a></li>
+                <li class="link"><a href="{{ url_for('about_us') }}">About Us</a></li>
                 {% if current_user.is_authenticated %}
                 <li class="link"><a href="{{url_for('auth.logout')}}">Logout</a></li>
                 {% endif %}

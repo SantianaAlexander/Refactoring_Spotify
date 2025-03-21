@@ -6,7 +6,6 @@ from flask_bcrypt import Bcrypt
 from services.models import db, User
 from blueprints.auth import auth_bp
 from blueprints.home import home_bp
-from blueprints.about_us import aboutus_bp
 from blueprints.playlist import playlist_bp
 from blueprints.spotify import spotify_bp
 
@@ -35,7 +34,6 @@ with app.app_context():
 
 app.register_blueprint(auth_bp)
 app.register_blueprint(home_bp)
-app.register_blueprint(aboutus_bp)
 app.register_blueprint(playlist_bp)
 app.register_blueprint(spotify_bp)
 
@@ -43,9 +41,9 @@ app.register_blueprint(spotify_bp)
 def index():
     return redirect(url_for('auth.login'))
 
-@app.route('/area')
-def area_personale():
-    return render_template('area_personale.html', username=current_user.username)
+@app.route('/about_us')
+def about_us():
+    return render_template('about_us.html')
 
 if __name__ == "__main__":
     app.run(debug = True, port=5002)
