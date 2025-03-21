@@ -44,11 +44,15 @@
         </form>
         
         <ul class="nav-links">
-            <li class="link"><a href="{{ url_for('aboutus.about_us') }}">About Us</a></li>
+            <li class="link"><a href="{{ url_for('about_us') }}">About Us</a></li>
+            {% if current_user.is_authenticated %}
+                <li class="link"><a href="{{url_for('playlist.saved_playlists')}}">Playlist Salvate</a></li>
+                <li class="link"><a href="{{url_for('auth.logout')}}">Logout</a></li>
+            {% endif %}
             {% if session['token_info'] %}
-                <li class="link"><a href="{{ url_for('playlist.playlist') }}">Le mie playlist</a></li>
+                <li class="link"><a href="{{ url_for('playlist.playlist') }}">Playlist Private</a></li>
                 <li class="profile-dropdown">
-                    <img src="{{ profile_pic_url }}" class="profile-pic" alt="Profile Image">
+                    <img src="../static/images/SpotifyLogo.png" class="profile-pic" alt="Profile Image">
                     <div class="dropdown-menu">
                         <a href="{{ url_for('spotify.spotify_logout') }}">Disconnetti</a>
                     </div>

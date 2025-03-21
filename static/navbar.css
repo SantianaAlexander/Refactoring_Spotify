@@ -4,6 +4,12 @@
     align-items: center;
     background-color: #181818;
     padding: 10px 20px;
+    position: fixed;  /* Fissa la navbar */
+    top: 0;           /* La posiziona in alto */
+    left: 0;          /* La allinea a sinistra */
+    width: 100%;      /* Larga quanto tutto lo schermo */
+    background-color: #121212; /* Sostituisci con il colore che preferisci */
+    z-index: 1000;
 }
 nav {
     display: flex;

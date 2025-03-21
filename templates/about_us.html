@@ -19,7 +19,19 @@
     margin: 0;
     padding: 0;
 } 
-    
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #181818;
+    padding: 10px 20px;
+    position: fixed;  /* Fissa la navbar */
+    top: 0;           /* La posiziona in alto */
+    left: 0;          /* La allinea a sinistra */
+    width: 100%;      /* Larga quanto tutto lo schermo */
+    background-color: #121212; /* Sostituisci con il colore che preferisci */
+    z-index: 1000;
+}
 
     .h1About {
     color: #1DB954;
@@ -284,12 +296,12 @@ body {
             </form>
             
             <ul class="nav-links">
+                <li class="link"><a href="{{ url_for('playlist.saved_playlists') }}">Playlist Salvate</a></li>
                 {% if current_user.is_authenticated %}
                 <li class="link"><a href="{{url_for('auth.logout')}}">Logout</a></li>
                 {% endif %}
-            
             {% if session['token_info'] %}
-                <li class="link"><a href="{{url_for('playlist.playlist')}}">Le mie playlist</a></li>
+                <li class="link"><a href="{{url_for('playlist.playlist')}}">Playlist Private</a></li>
                 <li class="profile-dropdown">
                     <img src="../static/images/SpotifyLogo.png" class="profile-pic" alt="Profile Image">
                     <div class="dropdown-menu">
@@ -297,12 +309,18 @@ body {
                     </div>
                 </li>
             </ul>
+            {% else %}
+                <li class="linkimg">
+                    <a href="{{ url_for('spotify.spotify_login') }}" class="login-btn">
+                        <img src="/static/images/SpotifyLogo.png" alt="Login con Spotify" class="login-image">
+                    </a>
+                </li>
             {% endif %}
         </nav>
 
         <!-- SEZIONE ABOUT US -->
         <main class="container text-center mb-5 mainAbout">
-            <h1 class="h1About">ti presneto a me squattra</h1>
+            <h1 class="h1About pt-5">ti presneto a me squattra</h1>
             <p>Siamo un team di quattro appassionati di tecnologia, musica e sviluppo software, 
                 uniti dalla voglia di creare esperienze uniche attraverso il nostro progetto basato sull'API di Spotify. 
                 Ogni membro porta con sé competenze diverse, rendendo il nostro team equilibrato e dinamico.</p>

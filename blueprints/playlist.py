@@ -1,8 +1,10 @@
-from flask import Blueprint, redirect, request, url_for, session
+from flask import Blueprint, redirect, request, url_for, session, flash
 from flask import Blueprint, redirect, request, url_for, session, render_template
+from flask_login import login_required, current_user
 from services.spotify_oauth import sp_oauth, get_spotify_object
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
+from services.models import db, Playlist
 
 playlist_bp = Blueprint('playlist', __name__)
 
@@ -32,6 +34,16 @@ def playlist():
 
     return render_template('playlist.html', playlists=playlists_info, profile_pic_url=profile_pic_url)
 
+@playlist_bp.route("/public_playlist/<playlist_id>")
+def public_playlist_details(playlist_id):
+    sp = get_spotify_client()
+    tracks = sp.playlist_tracks(playlist_id)["items"]
+    profile_pic_url = None
+    user_info = sp.current_user()
+    if user_info.get("images"):
+        profile_pic_url = user_info["images"][0]["url"]
+    return render_template("public_playlist_details.html", tracks=tracks, profile_pic_url=profile_pic_url)
+
 @playlist_bp.route('/playlist_details/<playlist_id>')
 def playlist_details(playlist_id):
     token_info = session.get('token_info', None)
@@ -47,3 +59,65 @@ def playlist_details(playlist_id):
         profile_pic_url = user_info["images"][0]["url"]
 
     return render_template('playlist_details.html', tracks=tracks, playlist=playlist, profile_pic_url=profile_pic_url)
+
+@playlist_bp.route("/saved_playlists")
+@login_required
+def saved_playlists():
+    saved_playlists = Playlist.query.filter_by(user_id=current_user.id).all()
+    
+    sp = get_spotify_client()
+    playlists_info = []
+
+    for playlist in saved_playlists:
+        details = sp.playlist(playlist.spotify_id)
+        playlists_info.append({
+            "id": playlist.spotify_id,
+            "name": details["name"],
+            "image": details["images"][0]["url"] if details["images"] else "/static/images/default_cover.png"
+        })
+
+    return render_template("saved_playlists.html", playlists=playlists_info)
+
+@playlist_bp.route("/add_playlist/<playlist_id>", methods=["POST"])
+@login_required
+def add_playlist(playlist_id):
+     # Ottieni informazioni sulla playlist da Spotify
+    sp = get_spotify_client()  # Assicurati che questa funzione recuperi il client Spotify correttamente
+    playlist_details = sp.playlist(playlist_id)
+
+    # Recupera il nome della playlist e l'eventuale immagine
+    name = playlist_details.get("name")
+    image_url = playlist_details.get("images", [{}])[0].get("url") if playlist_details.get("images") else None
+
+    # Controlla se la playlist è già salvata
+    existing_playlist = Playlist.query.filter_by(user_id=current_user.id, spotify_id=playlist_id).first()
+    
+    if existing_playlist:
+        flash("Questa playlist è già salvata!", "info")
+    else:
+        # Salva la playlist con il nome e l'immagine
+        new_playlist = Playlist(
+            user_id=current_user.id,
+            spotify_id=playlist_id,
+            name=name,
+            image_url=image_url
+        )
+        db.session.add(new_playlist)
+        db.session.commit()
+        flash("Playlist aggiunta con successo!", "success")
+    
+    return redirect(url_for("playlist.saved_playlists"))
+
+@playlist_bp.route("/delete_playlist/<playlist_id>", methods=["POST"])
+@login_required
+def delete_playlist(playlist_id):
+    playlist = Playlist.query.filter_by(user_id=current_user.id, spotify_id=playlist_id).first()
+    
+    if playlist:
+        db.session.delete(playlist)
+        db.session.commit()
+        flash("Playlist rimossa con successo!", "success")
+    else:
+        flash("Playlist non trovata.", "danger")
+    
+    return redirect(url_for('playlist.saved_playlists'))

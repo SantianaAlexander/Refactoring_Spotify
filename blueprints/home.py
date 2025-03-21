@@ -100,13 +100,3 @@ def visualizza_playlist(playlist_id):
         print("Errore nel recupero della playlist:", e)
 
     return render_template("playlist.html", playlist=playlist_data, tracks=tracks)
-
-@home_bp.route("/public_playlist/<playlist_id>")
-def public_playlist_details(playlist_id):
-    sp = get_spotify_client()
-    tracks = sp.playlist_tracks(playlist_id)["items"]
-    profile_pic_url = None
-    user_info = sp.current_user()
-    if user_info.get("images"):
-        profile_pic_url = user_info["images"][0]["url"]
-    return render_template("public_playlist_details.html", tracks=tracks, profile_pic_url=profile_pic_url)

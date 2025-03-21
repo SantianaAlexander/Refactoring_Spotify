@@ -1,14 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="../static/style.css">
         <link rel="stylesheet" href="../static/navbar.css">
-        <title>Spotify API - Dettagli Playlist</title>
+        <title>Spotify API</title>
+    </head>
+    <body>
         <style>
+            .imgPlaylist {
+                border-radius: 10px;
+                margin: 10px;
+            }
             table {
-                width: 80%;
+                width: 100%;
                 margin: 20px auto;
                 border-collapse: collapse;
                 background: #1e1e1e;
@@ -29,9 +35,21 @@
             table tr:hover {
                 background: #333;
             }
+            .btn-remove {
+                width: 50%;
+                padding: 10px 10px;
+                background-color: transparent;
+                color: white;
+                border-radius: 5px;
+                border: 2px solid #f44336;
+                transition: transform 0.2s ease-in-out;
+                text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+                cursor: pointer; 
+            }
+            .btn-remove:hover {
+                transform: scale(1.1); 
+            }
         </style>
-    </head>
-    <body>
         <nav class="navbar">
             <a href="{{ url_for('home.home') }}" class="home-btn">
                 <img src="/static/images/homeLogo.png" alt="Home" class="home-image">
@@ -45,18 +63,18 @@
             
             <ul class="nav-links">
                 <li class="link"><a href="{{ url_for('about_us') }}">About Us</a></li>
-                <li class="link"><a href="{{ url_for('playlist.saved_playlists') }}">Playlist Salvate</a></li>
                 {% if current_user.is_authenticated %}
-                    <li class="link"><a href="{{url_for('auth.logout')}}">Logout</a></li>
+                <li class="link"><a href="{{url_for('auth.logout')}}">Logout</a></li>
                 {% endif %}
                 {% if session['token_info'] %}
-                    <li class="link"><a href="{{ url_for('playlist.playlist') }}">Playlist Private</a></li>
+                    <li class="link"><a href="{{url_for('playlist.playlist')}}">Playlist Private</a></li>
                     <li class="profile-dropdown">
                         <img src="../static/images/SpotifyLogo.png" class="profile-pic" alt="Profile Image">
                         <div class="dropdown-menu">
                             <a href="{{ url_for('spotify.spotify_logout') }}">Disconnetti</a>
                         </div>
                     </li>
+                </ul>
                 {% else %}
                     <li class="linkimg">
                         <a href="{{ url_for('spotify.spotify_login') }}" class="login-btn">
@@ -66,40 +84,38 @@
                 {% endif %}
             </ul>
         </nav>
-        <h2 style="padding-top: 70px; display: flex; justify-content: center;">Brani nella tua Playlist:</h2>
-        {% if tracks %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Nome Brano</th>
-                    <th>Album</th>
-                    <th>Artista</th>
-                    <th>Copertina</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for brano in tracks %}
-            <tr>
-                <td>{{ brano['track']['name'] }}</td>
-                <td>{{ brano['track']['album']['name'] }}</td>
-                <td>
-                    {% for artist in brano['track']['artists'] %}
-                    {{ artist['name'] }}{% if not loop.last %}, {% endif %}
-                    {% endfor %}
-                </td>
-                <td>
-                {% if brano['track']['album']['images'] %}
-                    <img class="imgPlaylist" src="{{ brano['track']['album']['images'][0]['url'] }}" width="50" alt="Copertina album">
-                {% else %}
-                    Nessuna immagine
-                {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-            <p>Non ci sono brani nella playlist.</p>
-        {% endif %}
+        <main>
+            <h1>Le mie playlist salvate</h1>
+            {% if playlists %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome Playlist</th>
+                            <th>Copertina</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for playlist in playlists %}
+                        <tr>
+                            <td>{{ playlist.name }}</td>
+                            <td>
+                                <img src="{{ playlist.image }}" class="imgPlaylist" width="50" alt="Copertina playlist">
+                            </td>
+                            <td><a href="{{ url_for('playlist.public_playlist_details', playlist_id=playlist['id']) }}" style="color: white;">Vedi Brani</a></td>
+                            <td>
+                                <form action="{{ url_for('playlist.delete_playlist', playlist_id=playlist.id) }}" method="POST" style="display:inline;">
+                                    <button type="submit" class="btn-remove">Rimuovi</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>Non hai ancora salvato nessuna playlist.</p>
+            {% endif %}
+        </main>
     </body>
 </html>

@@ -21,7 +21,19 @@
         .btn:hover {
             transform: scale(1.1); 
         }
-        
+        .btn-save {
+            padding: 10px 10px;
+            background-color: transparent;
+            color: white;
+            border-radius: 5px;
+            border: 2px solid #1ed760;
+            transition: transform 0.2s ease-in-out;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+            cursor: pointer; 
+        }
+        .btn-save:hover {
+            transform: scale(1.1); 
+        }
         .imgPlaylist {
             border-radius: 10px;
             margin: 10px;
@@ -63,6 +75,9 @@
             
             <ul class="nav-links">
                 <li class="link"><a href="{{ url_for('about_us') }}">About Us</a></li>
+                {% if session['token_info'] %}
+                    <li class="link"><a href="{{ url_for('playlist.playlist') }}">Playlisy Private</a></li>
+                {% endif %}
                 {% if current_user.is_authenticated %}
                 <li class="link"><a href="{{url_for('auth.logout')}}">Logout</a></li>
                 {% endif %}
@@ -82,9 +97,9 @@
                     <a href="{{ url_for('spotify.spotify_logout') }}" class="btn">Logout Spotify</a>
                 {% endif %}
                 <br>
+                <p style="text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);">Dai un'occhiata alle playlist che hai salvato!</p>
+                <a href="{{ url_for('playlist.saved_playlists') }}" class="btn" style="text-decoration: none; color: white;">Playlist Salvate</a>
                 {% if session['token_info'] %}
-                    <p style="text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);">Scopri la tua musica e le tue playlist preferite.</p>
-                    <a href="{{ url_for('playlist.playlist') }}" class="btn" style="text-decoration: none; color: white;">Vai alle mie playlist</a>
                     <br>
                     {% if selected_playlist %}
                         <h2>Playlist selezionata:</h2>
@@ -111,6 +126,7 @@
                                 <th>Numero di Brani</th>
                                 <th>Copertina</th>
                                 <th></th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -125,7 +141,12 @@
                                         Nessuna immagine
                                     {% endif %}
                                 </td>
-                                <td><a href="{{ url_for('home.public_playlist_details', playlist_id=playlist['id']) }}" style="color: white;">Vedi Brani</a></td>
+                                <td><a href="{{ url_for('playlist.public_playlist_details', playlist_id=playlist['id']) }}" style="color: white;">Vedi Brani</a></td>
+                                <td>
+                                    <form action="{{ url_for('playlist.add_playlist', playlist_id=playlist.id) }}" method="POST">
+                                        <button type="submit" class="btn-save">Salva</button>
+                                    </form>
+                                </td>
                             </tr>
                             {% endfor %}
                         </tbody>

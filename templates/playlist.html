@@ -48,11 +48,11 @@
         </form>
         
         <ul class="nav-links">
-            <li class="link"><a href="{{ url_for('aboutus.about_us') }}">About Us</a></li>
+            <li class="link"><a href="{{ url_for('about_us') }}">About Us</a></li>
+            <li class="link"><a href="{{ url_for('playlist.saved_playlists') }}">Playlist Salvate</a></li>
             {% if current_user.is_authenticated %}
             <li class="link"><a href="{{url_for('auth.logout')}}">Logout</a></li>
             {% endif %}
-        
         {% if session['token_info'] %}
             <li class="profile-dropdown">
                 <img src="../static/images/SpotifyLogo.png" class="profile-pic" alt="Profile Image">
@@ -61,6 +61,12 @@
                 </div>
             </li>
         </ul>
+        {% else %}
+            <li class="linkimg">
+                <a href="{{ url_for('spotify.spotify_login') }}" class="login-btn">
+                    <img src="/static/images/SpotifyLogo.png" alt="Login con Spotify" class="login-image">
+                </a>
+            </li>
         {% endif %}
     </nav>
     <!-- MAIN -->
