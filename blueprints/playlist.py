@@ -71,32 +71,37 @@ def saved_playlists():
 
     for playlist in saved_playlists:
         details = sp.playlist(playlist.spotify_id)
+        tracks = sp.playlist_tracks(playlist.spotify_id)['items']
+        analysis = analyze_and_visualize(playlist.spotify_id)
         playlists_info.append({
             "id": playlist.spotify_id,
             "name": details["name"],
-            "image": details["images"][0]["url"] if details["images"] else "/static/images/default_cover.png"
+            "image": details["images"][0]["url"] if details["images"] else "/static/images/default_cover.png",
+            "analysis": analysis,
         })
+    
+    print(f"Playlists Info: {playlists_info}")
 
     return render_template("saved_playlists.html", playlists=playlists_info)
 
 @playlist_bp.route("/add_playlist/<playlist_id>", methods=["POST"])
 @login_required
 def add_playlist(playlist_id):
-     # Ottieni informazioni sulla playlist da Spotify
-    sp = get_spotify_client()  # Assicurati che questa funzione recuperi il client Spotify correttamente
+
+    sp = get_spotify_client()  
     playlist_details = sp.playlist(playlist_id)
 
-    # Recupera il nome della playlist e l'eventuale immagine
+
     name = playlist_details.get("name")
     image_url = playlist_details.get("images", [{}])[0].get("url") if playlist_details.get("images") else None
 
-    # Controlla se la playlist è già salvata
+
     existing_playlist = Playlist.query.filter_by(user_id=current_user.id, spotify_id=playlist_id).first()
     
     if existing_playlist:
         flash("Questa playlist è già salvata!", "info")
     else:
-        # Salva la playlist con il nome e l'immagine
+
         new_playlist = Playlist(
             user_id=current_user.id,
             spotify_id=playlist_id,

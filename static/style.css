@@ -46,7 +46,29 @@ main p {
     font-size: 1.2rem;
     margin-bottom: 20px;
 }
+details summary {
+    background-color: #1DB954;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
 
+details[open] summary {
+    background-color: #1ed760;
+}
+
+.playlist-analysis {
+    background: #242424;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+.playlist-analysis h6 {
+    color: white;
+}
 
 
 

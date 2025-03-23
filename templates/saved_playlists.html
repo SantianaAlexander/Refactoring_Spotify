@@ -49,6 +49,29 @@
             .btn-remove:hover {
                 transform: scale(1.1); 
             }
+            summary {
+                font-weight: bold;
+                cursor: pointer;
+            }
+            details {
+                margin-top: 10px;
+                padding: 10px;
+                background: #333;
+                border-radius: 5px;
+            }
+            details[open] {
+                background: #242424;
+            }
+            .analysis-section {
+                margin-top: 10px;
+            }
+            .popularity-graph, .artists-graph {
+                margin-top: 10px;
+                background-color: #1DB954;
+                padding: 10px;
+                border-radius: 5px;
+                color: white;
+            }
         </style>
         <nav class="navbar">
             <a href="{{ url_for('home.home') }}" class="home-btn">
@@ -110,12 +133,34 @@
                                 </form>
                             </td>
                         </tr>
+                        
+                        <tr>
+                            <td colspan="4">
+                                <details>
+                                    <summary>Mostra Analisi</summary>
+                                    <div class="analysis-section">
+                                        {% if playlist.analysis %}
+                                            <p><strong>Durata Media:</strong> {{ playlist.analysis.avg_duration }} secondi</p>
+                                            <div class="popularity-graph">
+                                                {{ playlist.analysis.fig_popularity|safe }}
+                                            </div>
+                                            <div class="artists-graph">
+                                                {{ playlist.analysis.fig_artists_presence|safe }}
+                                            </div>
+                                        {% else %}
+                                            <p>Nessuna analisi disponibile per questa playlist.</p>
+                                        {% endif %}
+                                    </div>
+                                </details>
+                            </td>
+                        </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             {% else %}
                 <p>Non hai ancora salvato nessuna playlist.</p>
             {% endif %}
+            
         </main>
     </body>
 </html>
