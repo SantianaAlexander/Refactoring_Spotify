@@ -5,6 +5,7 @@ from services.spotify_oauth import sp_oauth, get_spotify_object
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 from services.models import db, Playlist
+from services.analisi import analyze_and_visualize
 
 playlist_bp = Blueprint('playlist', __name__)
 
