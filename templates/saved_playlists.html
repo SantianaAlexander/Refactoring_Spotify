@@ -147,6 +147,9 @@
                                             <div class="artists-graph">
                                                 {{ playlist.analysis.fig_artists_presence|safe }}
                                             </div>
+                                            <div class="artists-pie-chart">
+                                                {{ playlist.analysis.fig_pie_chart|safe }}
+                                            </div>
                                         {% else %}
                                             <p>Nessuna analisi disponibile per questa playlist.</p>
                                         {% endif %}
