@@ -12,6 +12,9 @@ class User(db.Model, UserMixin):
 class Playlist(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)
-    spotify_id = db.Column(db.String(100), unique=True, nullable=False)
+    spotify_id = db.Column(db.String(100), nullable=False)
     image_url = db.Column(db.String(300)) 
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
+
+     
+    __table_args__ = (db.UniqueConstraint('spotify_id', 'user_id', name='unique_playlist_per_user'),)

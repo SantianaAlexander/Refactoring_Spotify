@@ -20,10 +20,8 @@ def analyze_and_visualize(playlist_id):
 
     df = pd.DataFrame(data)
 
-    avg_duration_sec = df["duration_ms"].mean() / 1000 
-
     fig_popularity = px.histogram(
-        df, x="popularity", nbins=20,
+        df, x="popularity", nbins=10,
         title="Distribuzione della Popolarità delle Tracce",
         labels={"popularity": "Popolarità", "count": "Numero di Brani"}
     )
@@ -36,15 +34,14 @@ def analyze_and_visualize(playlist_id):
         title="Top 10 Artisti più Presenti nella Playlist"
     )
 
-artist_counts_filtered = artist_counts[artist_counts["count"] > 1]
-fig_pie_chart = px.pie(
-    artist_counts_filtered, values="count", names="artist",
-    title="Distribuzione degli Artisti nella Playlist"
-)
+    artist_counts_filtered = artist_counts[artist_counts["count"] > 1].head(10)
+    fig_pie_chart = px.pie(
+        artist_counts_filtered, values="count", names="artist",
+        title="Distribuzione degli Artisti nella Playlist"
+    )
 
 
     return {
-        "avg_duration": f"Durata media: {avg_duration_sec:.2f} secondi",
         "fig_popularity": fig_popularity.to_html(full_html=False),
         "fig_artists_presence": fig_artists_presence.to_html(full_html=False),
         "fig_pie_chart": fig_pie_chart.to_html(full_html=False)
