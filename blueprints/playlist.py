@@ -9,19 +9,7 @@ from services.analisi import analyze_and_visualize, get_tracks_from_playlist, ge
 
 playlist_bp = Blueprint('playlist', __name__)
 
-@playlist_bp.route("/grafici_playlist")
-def grafici_playlist():
-    """Endpoint per ottenere i grafici della playlist."""
-    playlist_id = request.args.get('playlist_id')
-    if not playlist_id:
-        return jsonify({'error': 'Playlist ID mancante'}), 400
 
-    tracks = get_tracks_from_playlist(playlist_id)  # Recupera i brani della playlist
-    if not tracks:
-        return jsonify({'error': 'Nessun brano trovato'}), 404
-
-    fig_artisti, fig_album = genera_grafici(tracks)
-    return jsonify({'grafico_artisti': fig_artisti, 'grafico_album': fig_album})
 
 def get_spotify_client():
     token_info = session.get("token_info")
@@ -57,8 +45,17 @@ def public_playlist_details(playlist_id):
     user_info = sp.current_user()
     if user_info.get("images"):
         profile_pic_url = user_info["images"][0]["url"]
-    return render_template("public_playlist_details.html", tracks=tracks, profile_pic_url=profile_pic_url, playlist_id=playlist_id)
+    
+    # Genera i grafici
+    grafici = genera_grafici(tracks)
 
+    return render_template(
+        "public_playlist_details.html",
+        tracks=tracks,
+        profile_pic_url=profile_pic_url,
+        playlist_id=playlist_id,
+        grafici=grafici
+    )
 
 @playlist_bp.route("/saved_playlists")
 @login_required

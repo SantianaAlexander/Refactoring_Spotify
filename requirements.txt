@@ -4,3 +4,5 @@ SQLAlchemy
 flask_login
 flask_sqlalchemy
 flask_bcrypt
+setuptools_scm
+numpy
