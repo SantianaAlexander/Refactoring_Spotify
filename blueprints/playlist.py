@@ -1,13 +1,27 @@
-from flask import Blueprint, redirect, request, url_for, session, flash
+from flask import Blueprint, redirect, request, url_for, session, flash, jsonify
 from flask import Blueprint, redirect, request, url_for, session, render_template
 from flask_login import login_required, current_user
 from services.spotify_oauth import sp_oauth, get_spotify_object
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 from services.models import db, Playlist
-from services.analisi import analyze_and_visualize
+from services.analisi import analyze_and_visualize, get_tracks_from_playlist, genera_grafici
 
 playlist_bp = Blueprint('playlist', __name__)
+
+@playlist_bp.route("/grafici_playlist")
+def grafici_playlist():
+    """Endpoint per ottenere i grafici della playlist."""
+    playlist_id = request.args.get('playlist_id')
+    if not playlist_id:
+        return jsonify({'error': 'Playlist ID mancante'}), 400
+
+    tracks = get_tracks_from_playlist(playlist_id)  # Recupera i brani della playlist
+    if not tracks:
+        return jsonify({'error': 'Nessun brano trovato'}), 404
+
+    fig_artisti, fig_album = genera_grafici(tracks)
+    return jsonify({'grafico_artisti': fig_artisti, 'grafico_album': fig_album})
 
 def get_spotify_client():
     token_info = session.get("token_info")
@@ -43,23 +57,8 @@ def public_playlist_details(playlist_id):
     user_info = sp.current_user()
     if user_info.get("images"):
         profile_pic_url = user_info["images"][0]["url"]
-    return render_template("public_playlist_details.html", tracks=tracks, profile_pic_url=profile_pic_url)
+    return render_template("public_playlist_details.html", tracks=tracks, profile_pic_url=profile_pic_url, playlist_id=playlist_id)
 
-@playlist_bp.route('/playlist_details/<playlist_id>')
-def playlist_details(playlist_id):
-    token_info = session.get('token_info', None)
-    if not token_info:
-        return redirect(url_for('auth.login'))  
-
-    sp = get_spotify_client() 
-    results = sp.playlist_tracks(playlist_id)  
-    tracks = results['items'] 
-    profile_pic_url = None
-    user_info = sp.current_user()
-    if user_info.get("images"):
-        profile_pic_url = user_info["images"][0]["url"]
-
-    return render_template('playlist_details.html', tracks=tracks, playlist=playlist, profile_pic_url=profile_pic_url)
 
 @playlist_bp.route("/saved_playlists")
 @login_required
