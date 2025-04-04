@@ -105,32 +105,24 @@
     </table>
     <div class="charts-container">
         <h2>Analisi della Playlist</h2>
-        
-        <div id="grafico-artisti">{{ grafici['grafico_anni']|tojson }}</div>
-        <div id="grafico-album">{{ grafici['grafico_durata']|tojson }}</div>
-        <div id="grafico-popolarita">{{ grafici['grafico_popolarita']|tojson }}</div>
-        <div id="grafico-generi">{{ grafici['grafico_generi']|tojson }}</div>
-        <div id="grafico-evoluzione">{{ grafici['grafico_evoluzione']|tojson }}</div>
+        <details>
+            <summary>Mostra Analisi</summary>
+            <div class="analysis-section">
+                {% if grafici %}
+                    <div class="popularity-graph">
+                        {{ grafici.fig_popularity|safe }}
+                    </div>
+                    <div class="artists-graph">
+                        {{ grafici.fig_artists_presence|safe }}
+                    </div>
+                    <div class="artists-pie-chart">
+                        {{ grafici.fig_pie_chart|safe }}
+                    </div>
+                {% else %}
+                    <p>Nessuna analisi disponibile per questa playlist.</p>
+                {% endif %}
+            </div>
+        </details>
     </div>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-    const playlistId = "{{ playlist_id }}";  // Assicurati che venga passato l'ID playlist dal backend
-    
-    // Richiesta per ottenere i grafici dalla playlist
-    fetch(`/grafici_playlist?playlist_id=${playlistId}`)
-        .then(response => response.json())
-        .then(data => {
-            // Carica i grafici nella pagina se esistono
-            if (data.grafico_anni && data.grafico_durata && data.grafico_popolarita && data.grafico_generi && data.grafico_evoluzione) {
-                document.getElementById("grafico-artisti").innerHTML = `<img src="data:image/png;base64,${data.grafico_anni}" alt="Grafico Artisti">`;
-                document.getElementById("grafico-album").innerHTML = `<img src="data:image/png;base64,${data.grafico_durata}" alt="Grafico Album">`;
-                // Aggiungi altre immagini per gli altri grafici
-            } else {
-                console.error("Errore nel caricamento dei grafici.");
-            }
-        })
-        .catch(error => console.error("Errore nella richiesta:", error));
-});
-    </script>
 </body>
 </html>
