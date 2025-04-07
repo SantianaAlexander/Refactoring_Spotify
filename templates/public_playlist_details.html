@@ -71,35 +71,30 @@
     <table>
         <thead>
             <tr>
-                <th>Titolo</th>
-                <th>Artista</th>
-                <th>Album</th>
-                <th>Preview</th>
+              <th>Nome Brano</th>
+              <th>Artisti</th>
+              <th>Album</th>
+              <th>Popolarità</th>
+              <th>Durata</th>
+              <th>Data di Rilascio</th>
+              <th>Generi</th>
             </tr>
-        </thead>
+          </thead>
         <tbody>
             {% for track in tracks %}
-            <tr>
-                <td>{{ track['track']['name'] }}</td>
-                <td>{{ track['track']['artists'][0]['name'] }}</td>
-                <td>
-                    {% if track['track'] and track['track']['artists'] %}
-                        {{ track['track']['artists'][0]['name'] }}
-                    {% else %}
-                        Artista sconosciuto
-                    {% endif %}
-                </td>                
-                <td>
-                    {% if track['track']['preview_url'] %}
-                        <audio controls>
-                            <source src="{{ track['track']['preview_url'] }}" type="audio/mpeg">
-                            Il tuo browser non supporta l'elemento audio.
-                        </audio>
-                    {% else %}
-                        Nessuna anteprima
-                    {% endif %}
-                </td>
-            </tr>
+                <tr>
+                    <td>{{ track.name }}</td>
+                    <td>{{ track.artists }}</td>
+                    <td>{{ track.album }}</td>
+                    <td>{{ track.popularity }}</td>
+                    <td>{{ track.duration_ms }}</td>
+                    <td>{{ track.release_date }}</td>
+                    <td>
+                        {% for genre in track.genres %}
+                            <span class="badge bg-secondary">{{ genre }}</span>
+                        {% endfor %}
+                    </td>
+                </tr>
             {% endfor %}
         </tbody>
     </table>
@@ -107,21 +102,32 @@
         <h2>Analisi della Playlist</h2>
         <details>
             <summary>Mostra Analisi</summary>
-            <div class="analysis-section">
-                {% if grafici %}
-                    <div class="popularity-graph">
-                        {{ grafici.fig_popularity|safe }}
-                    </div>
-                    <div class="artists-graph">
-                        {{ grafici.fig_artists_presence|safe }}
-                    </div>
-                    <div class="artists-pie-chart">
-                        {{ grafici.fig_pie_chart|safe }}
-                    </div>
-                {% else %}
-                    <p>Nessuna analisi disponibile per questa playlist.</p>
-                {% endif %}
-            </div>
+                <h3>Grafici della Playlist</h3>
+
+                <div>
+                <h4>Distribuzione Popolarità</h4>
+                <div>{{ grafici['fig_popularity']|safe }}</div>
+                </div>
+
+                <div>
+                <h4>Distribuzione Durata</h4>
+                <div>{{ grafici['fig_duration']|safe }}</div>
+                </div>
+
+                <div>
+                <h4>Distribuzione per Anno</h4>
+                <div>{{ grafici['fig_years']|safe }}</div>
+                </div>
+
+                <div>
+                <h4>Distribuzione dei Generi</h4>
+                <div>{{ grafici['fig_genres']|safe }}</div>
+                </div>
+
+                <div>
+                <h4>Evoluzione della Popolarità nel Tempo</h4>
+                <div>{{ grafici['fig_trend']|safe }}</div>
+                </div>
         </details>
     </div>
 </body>

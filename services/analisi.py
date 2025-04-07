@@ -1,13 +1,8 @@
 from flask import Flask, request, jsonify
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
-import plotly.express as px
-import pandas as pd
-from collections import Counter
-from services.spotify_utilis import get_playlist_tracks
 from services.spotify_client import get_spotify_client
-import matplotlib.pyplot as plt
-import numpy as np
+import pandas as pd
 import plotly.express as px
 import plotly.io as pio
 from collections import Counter
@@ -81,70 +76,82 @@ def get_tracks_from_playlist(playlist_id):
         tracks.append(track_info)
     return tracks
 
-def analyze_and_visualyze_tracks(tracks):
+def analyze_playlist_tracks(playlist_id):
+    sp = get_spotify_client()
+    results = sp.playlist_tracks(playlist_id)
+    tracks = results['items']
+
     track_data = []
 
-    # Prepara i dati
     for item in tracks:
-        track = item.get("track")  # Prendiamo i dati della traccia
-        if track:
-            track_data.append({
-                "name": track["name"],
-                "popularity": track.get("popularity", 0),
-                "duration_ms": track["duration_ms"],
-                "release_date": track["album"]["release_date"],
-                "genres": track.get("genres", []),  # Aggiungiamo i generi
-            })
-    
-    # 📊 Grafico della popolarità delle tracce
-    fig_popularity = px.histogram(
-        track_data, x="popularity", title="Distribuzione della Popolarità delle Tracce", nbins=20
-    )
-    fig_popularity_html = pio.to_html(fig_popularity, full_html=False)
+        track = item.get("track")
+        if not track:
+            continue
 
-    # 📊 Durata delle tracce
-    fig_duration = px.histogram(
-        track_data, x="duration_ms", title="Distribuzione della Durata delle Tracce", nbins=20
-    )
-    fig_duration_html = pio.to_html(fig_duration, full_html=False)
+        track_name = track.get("name")
+        duration_ms = track.get("duration_ms")
+        popularity = track.get("popularity", 0)
 
-    # 📅 Distribuzione temporale delle tracce (per anno)
-    release_years = [datetime.strptime(track["release_date"], "%Y-%m-%d").year if "-" in track["release_date"] else int(track["release_date"]) for track in track_data]
-    fig_release_years = px.histogram(
-        x=release_years, title="Distribuzione dei Brani per Anno di Pubblicazione", nbins=20
-    )
-    fig_release_years_html = pio.to_html(fig_release_years, full_html=False)
+        album = track.get("album", {})
+        release_date = album.get("release_date", "")
+        release_year = release_date.split("-")[0] if release_date else None
 
-    # 🎶 Distribuzione dei generi musicali (somma delle occorrenze)
+        artists = track.get("artists", [])
+        main_artist = artists[0] if artists else {}
+        artist_name = main_artist.get("name")
+        artist_id = main_artist.get("id")
+
+        # Recupera i generi dell'artista (solo se l'id esiste)
+        genres = []
+        if artist_id:
+            artist_info = sp.artist(artist_id)
+            genres = artist_info.get("genres", [])
+
+        track_data.append({
+            "track_name": track_name,
+            "artist_name": artist_name,
+            "duration_ms": duration_ms,
+            "popularity": popularity,
+            "release_year": int(release_year) if release_year and release_year.isdigit() else None,
+            "genres": genres
+        })
+
+    df = pd.DataFrame(track_data)
+
+    # 1. Distribuzione temporale dei brani
+    fig_years = px.histogram(df.dropna(subset=['release_year']), x="release_year", nbins=20, title="Distribuzione dei brani per anno")
+
+    # 2. Distribuzione della durata
+    fig_duration = px.histogram(df, x="duration_ms", nbins=20, title="Distribuzione della durata dei brani (ms)")
+
+    # 3. Distribuzione della popolarità
+    fig_popularity = px.histogram(df, x="popularity", nbins=20, title="Distribuzione della popolarità")
+
+    # 4. Distribuzione dei generi
     all_genres = [genre for track in track_data for genre in track["genres"]]
     genre_counts = dict(Counter(all_genres))
-    fig_genres = px.bar(
-        x=list(genre_counts.keys()), 
-        y=list(genre_counts.values()), 
-        labels={'x': 'Generi', 'y': 'Numero di Tracce'}, 
-        title="Distribuzione dei Generi Musicali"
-    )
-    fig_genres_html = pio.to_html(fig_genres, full_html=False)
 
-    # 📈 Evoluzione della popolarità nel tempo
-    popularity_over_time = [
-        {"year": datetime.strptime(track["release_date"], "%Y-%m-%d").year if "-" in track["release_date"] else int(track["release_date"]), 
-         "popularity": track["popularity"]} for track in track_data
-    ]
-    popularity_over_time.sort(key=lambda x: x["year"])  # Ordina per anno
-    fig_popularity_time = px.line(
-        popularity_over_time, x="year", y="popularity", title="Evoluzione della Popolarità nel Tempo"
-    )
-    fig_popularity_time_html = pio.to_html(fig_popularity_time, full_html=False)
+    # Creazione del DataFrame dai conteggi dei generi
+    genre_counts_df = pd.DataFrame(list(genre_counts.items()), columns=["Genre", "Count"])
 
-    # Ritorna tutti i grafici come HTML
+    # Creazione del grafico a barre
+    fig_genres = px.bar(genre_counts_df, x="Genre", y="Count",
+                        labels={"Genre": "Genere", "Count": "Conteggio"},
+                        title="Distribuzione dei generi musicali")
+
+    # 5. Evoluzione della popolarità nel tempo
+    pop_year = df.dropna(subset=['release_year'])
+    fig_trend = px.line(pop_year.sort_values('release_year'), x="release_year", y="popularity",
+                        title="Evoluzione della popolarità nel tempo")
+
     return {
-        "fig_popularity": fig_popularity_html,
-        "fig_duration": fig_duration_html,
-        "fig_release_years": fig_release_years_html,
-        "fig_genres": fig_genres_html,
-        "fig_popularity_time": fig_popularity_time_html
+        "fig_years": pio.to_html(fig_years, full_html=False),
+        "fig_duration": pio.to_html(fig_duration, full_html=False),
+        "fig_popularity": pio.to_html(fig_popularity, full_html=False),
+        "fig_genres": pio.to_html(fig_genres, full_html=False),
+        "fig_trend": pio.to_html(fig_trend, full_html=False)
     }
+
 
 if __name__ == "__main__":
     app.run(debug=True)

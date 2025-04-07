@@ -5,7 +5,7 @@ from services.spotify_oauth import sp_oauth, get_spotify_object
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 from services.models import db, Playlist
-from services.analisi import analyze_and_visualize, get_tracks_from_playlist, analyze_and_visualyze_tracks
+from services.analisi import analyze_and_visualize, analyze_playlist_tracks
 
 playlist_bp = Blueprint('playlist', __name__)
 
@@ -40,31 +40,44 @@ def playlist():
 @playlist_bp.route("/public_playlist/<playlist_id>")
 def public_playlist_details(playlist_id):
     sp = get_spotify_client()
+
+    # Ottieni i dettagli della playlist
     playlist_details = sp.playlist(playlist_id)
     tracks = sp.playlist_tracks(playlist_id)["items"]
 
-    # Estrai i dati dei brani in un formato adatto alla funzione di analisi
+    # Estrai i dati dei brani in un formato adatto all’analisi
     track_data = []
     for item in tracks:
         track = item["track"]
-        if track:  # Evita eventuali elementi nulli
+        if track:  # Evita elementi nulli
+            # Opzionalmente, recupera i generi del primo artista
+            artist_id = track["artists"][0]["id"]
+            artist_data = sp.artist(artist_id)
+            genres = artist_data.get("genres", [])
+
             track_data.append({
                 "name": track["name"],
                 "artists": ", ".join(artist["name"] for artist in track["artists"]),
                 "album": track["album"]["name"],
                 "popularity": track.get("popularity", 0),
                 "duration_ms": track["duration_ms"],
-                "release_date": track["album"]["release_date"]
+                "release_date": track["album"]["release_date"],
+                "genres": genres
             })
 
-    # Genera i grafici per i brani della playlist
-    grafici = analyze_and_visualyze_tracks(track_data)
+    # Genera i grafici con Plotly
+    grafici = analyze_playlist_tracks(playlist_id)
 
+    # Recupera immagine del profilo utente se disponibile
     profile_pic_url = None
-    user_info = sp.current_user()
-    if user_info.get("images"):
-        profile_pic_url = user_info["images"][0]["url"]
+    try:
+        user_info = sp.current_user()
+        if user_info.get("images"):
+            profile_pic_url = user_info["images"][0]["url"]
+    except:
+        pass  # L'utente potrebbe essere anonimo
 
+    # Renderizza il template con i dati e i grafici
     return render_template(
         "public_playlist_details.html",
         playlist=playlist_details,
