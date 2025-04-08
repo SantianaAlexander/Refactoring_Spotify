@@ -9,7 +9,7 @@ sp_oauth = SpotifyOAuth(
     client_id=SPOTIFY_CLIENT_ID,
     client_secret=SPOTIFY_CLIENT_SECRET,
     redirect_uri=SPOTIFY_REDIRECT_URI,
-    scope="user-library-read",
+    scope="user-read-private",
     show_dialog=True 
 )
 
