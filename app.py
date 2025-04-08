@@ -9,12 +9,6 @@ from blueprints.home import home_bp
 from blueprints.playlist import playlist_bp
 from blueprints.spotify import spotify_bp
 
-import pandas as pd
-import plotly.express as px
-import plotly.graph_objects as go
-from collections import Counter
-
-
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///spotipy.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

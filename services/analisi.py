@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 from services.spotify_client import get_spotify_client
@@ -6,7 +6,6 @@ import pandas as pd
 import plotly.express as px
 import plotly.io as pio
 from collections import Counter
-from datetime import datetime
  
 app = Flask(__name__)
  

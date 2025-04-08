@@ -22,7 +22,6 @@ body {
     width: 100%;
     height: calc(100vh - 60px); /* Copre tutto sotto la navbar */
     background: url('/static/images/background.jpg') center/cover no-repeat;
-    filter: blur(4px); /* Blur più leggero */
     z-index: -1; /* Lo manda dietro agli altri elementi */
 }
 
