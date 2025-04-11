@@ -8,6 +8,7 @@ from blueprints.auth import auth_bp
 from blueprints.home import home_bp
 from blueprints.playlist import playlist_bp
 from blueprints.spotify import spotify_bp
+from blueprints.compare import compare_bp
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///spotipy.db'
@@ -30,6 +31,7 @@ app.register_blueprint(auth_bp)
 app.register_blueprint(home_bp)
 app.register_blueprint(playlist_bp)
 app.register_blueprint(spotify_bp)
+app.register_blueprint(compare_bp, url_prefix='/compare')
 
 @app.route('/')
 def index():
@@ -40,5 +42,5 @@ def about_us():
     return render_template('about_us.html')
 
 if __name__ == "__main__":
-    app.run(debug = True, port=5003)
+    app.run(debug = True, port=5004)
 

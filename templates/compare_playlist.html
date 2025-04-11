@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comparazione Playlist</title>
+</head>
+<body>
+    <h1>Comparazione Playlist</h1>
+    <form action="{{ url_for('compare.generate_graph', graph_type='common_tracks') }}" method="get">
+        <label for="playlist_ids">Playlist IDs (separati da virgola):</label>
+        <input type="text" id="playlist_ids" name="playlist_ids" required>
+        <button type="submit">Confronta</button>
+    </form>
+    
+    <h2>Grafico Confronto Brani Comuni</h2>
+    {{ graph | safe }}
+</body>
+</html>

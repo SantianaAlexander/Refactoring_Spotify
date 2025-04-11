@@ -113,6 +113,7 @@
                 <table>
                     <thead>
                         <tr>
+                            <th></th>
                             <th>Nome Playlist</th>
                             <th>Copertina</th>
                             <th></th>
@@ -122,6 +123,9 @@
                     <tbody>
                         {% for playlist in playlists %}
                         <tr>
+                            <td>
+                                <input type="checkbox" name="playlist_ids" value="{{ playlist.id }}">
+                            </td>
                             <td>{{ playlist.name }}</td>
                             <td>
                                 <img src="{{ playlist.image }}" class="imgPlaylist" width="50" alt="Copertina playlist">
@@ -135,7 +139,7 @@
                         </tr>
                         
                         <tr>
-                            <td colspan="4">
+                            <td colspan="5">
                                 <details>
                                     <summary>Mostra Analisi</summary>
                                     <div class="analysis-section">
