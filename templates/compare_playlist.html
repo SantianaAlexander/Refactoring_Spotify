@@ -7,13 +7,33 @@
 </head>
 <body>
     <h1>Comparazione Playlist</h1>
-    <form action="{{ url_for('compare.generate_graph', graph_type='common_tracks') }}" method="get">
-        <label for="playlist_ids">Playlist IDs (separati da virgola):</label>
-        <input type="text" id="playlist_ids" name="playlist_ids" required>
-        <button type="submit">Confronta</button>
-    </form>
-    
-    <h2>Grafico Confronto Brani Comuni</h2>
-    {{ graph | safe }}
+{% block content %}
+    <h1>Confronto Playlist: {{ playlist1['name'] }} vs {{ playlist2['name'] }}</h1>
+
+    <div>
+        <h2>Grafico: Tracks in Common</h2>
+        <div>{{ graphs['common_tracks']|safe }}</div>
+    </div>
+
+    <div>
+        <h2>Grafico: Common Artists Frequency</h2>
+        <div>{{ graphs['common_artists']|safe }}</div>
+    </div>
+
+    <div>
+        <h2>Grafico: Average Popularity</h2>
+        <div>{{ graphs['popularity']|safe }}</div>
+    </div>
+
+    <div>
+        <h2>Grafico: Top Genres Distribution</h2>
+        <div>{{ graphs['genres']|safe }}</div>
+    </div>
+
+    <div>
+        <h2>Grafico: Release Year Distribution</h2>
+        <div>{{ graphs['temporal']|safe }}</div>
+    </div>
+{% endblock %}
 </body>
 </html>

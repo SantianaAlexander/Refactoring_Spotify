@@ -152,25 +152,3 @@ def delete_playlist(playlist_id):
         flash("Playlist non trovata.", "danger")
     
     return redirect(url_for('playlist.saved_playlists'))
-
-@playlist_bp.route("/compare_playlists", methods=["POST"])
-@login_required
-def compare_playlists(playlist_id_1, playlist_id_2):
-    sp = get_spotify_client()
-    
-    # Ottieni le playlist e i brani delle playlist
-    playlist1_details = sp.playlist(playlist_id_1)
-    playlist2_details = sp.playlist(playlist_id_2)
-
-    tracks1 = sp.playlist_tracks(playlist_id_1)["items"]
-    tracks2 = sp.playlist_tracks(playlist_id_2)["items"]
-
-    # Confronto delle playlist
-    confronto = compare_playlists_data(tracks1, tracks2)
-
-    return render_template(
-        "playlist_comparison.html", 
-        playlist1=playlist1_details, 
-        playlist2=playlist2_details,
-        confronto=confronto
-    )
