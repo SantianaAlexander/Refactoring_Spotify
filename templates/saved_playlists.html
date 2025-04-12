@@ -213,11 +213,23 @@
                     compareButton.style.opacity = 0.5;  // Rende il bottone "spent" e disattivato
                 }
             }
+    
             // Aggiungi i listener per monitorare le modifiche nelle checkbox
             checkboxes.forEach(checkbox => checkbox.addEventListener("change", checkPlaylistSelection));
-    
+        
             // Chiamato per la prima volta per impostare correttamente lo stato del bottone
             checkPlaylistSelection();
+    
+            // Aggiungi listener per il click del bottone "Compara"
+            compareButton.addEventListener('click', function(event) {
+                // Prevenire il comportamento predefinito del link (reindirizzamento)
+                event.preventDefault();
+                const url = compareButton.href;
+                console.log(`Generated URL: ${url}`);  // Log dell'URL generato per il confronto
+                if (url !== "#") {
+                    window.location.href = url;  // Forza il reindirizzamento manuale
+                }
+            });
         });
     </script>    
 </html>

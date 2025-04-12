@@ -4,36 +4,85 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Comparazione Playlist</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <link rel="stylesheet" href="../static/navbar.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
+<style>
+    .graphs-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 20px;
+    }
+
+    /* Singolo grafico */
+    .graph {
+        width: 48%;  /* Per mantenere due grafici su ogni riga */
+        padding: 20px;
+        background-color: #f0f0f0;
+        border-radius: 10px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+
+    .graph-content {
+        width: 100%;
+        height: 400px; /* Puoi regolare l'altezza del grafico se necessario */
+        overflow: hidden;
+        border-radius: 10px;
+    }
+</style>
 <body>
-    <h1>Comparazione Playlist</h1>
-{% block content %}
-    <h1>Confronto Playlist: {{ playlist1['name'] }} vs {{ playlist2['name'] }}</h1>
-
-    <div>
-        <h2>Grafico: Tracks in Common</h2>
-        <div>{{ graphs['common_tracks']|safe }}</div>
-    </div>
-
-    <div>
-        <h2>Grafico: Common Artists Frequency</h2>
-        <div>{{ graphs['common_artists']|safe }}</div>
-    </div>
-
-    <div>
-        <h2>Grafico: Average Popularity</h2>
-        <div>{{ graphs['popularity']|safe }}</div>
-    </div>
-
-    <div>
-        <h2>Grafico: Top Genres Distribution</h2>
-        <div>{{ graphs['genres']|safe }}</div>
-    </div>
-
-    <div>
-        <h2>Grafico: Release Year Distribution</h2>
-        <div>{{ graphs['temporal']|safe }}</div>
-    </div>
-{% endblock %}
+    <nav class="navbar">
+        <a href="{{ url_for('home.home') }}" class="home-btn">
+            <img src="/static/images/homeLogo.png" alt="Home" class="home-image">
+        </a>
+        <form class="search-form" action="{{ url_for('home.home') }}" method="POST">
+            <input type="text" name="query" placeholder="Cerca playlist..." class="search-input">
+            <button type="submit" class="search-btn">
+                <img src="/static/images/searchLogo.png" alt="Cerca" class="search-icon">
+            </button>
+        </form>
+        
+        <ul class="nav-links">
+            <li class="link"><a href="{{ url_for('about_us') }}">About Us</a></li>
+            {% if current_user.is_authenticated %}
+            <li class="link"><a href="{{url_for('auth.logout')}}">Logout</a></li>
+            {% endif %}
+            {% if session['token_info'] %}
+                <li class="link"><a href="{{url_for('playlist.playlist')}}">Playlist Private</a></li>
+                <li class="profile-dropdown">
+                    <img src="../static/images/SpotifyLogo.png" class="profile-pic" alt="Profile Image">
+                    <div class="dropdown-menu">
+                        <a href="{{ url_for('spotify.spotify_logout') }}">Disconnetti</a>
+                    </div>
+                </li>
+            </ul>
+            {% else %}
+                <li class="linkimg">
+                    <a href="{{ url_for('spotify.spotify_login') }}" class="login-btn">
+                        <img src="/static/images/SpotifyLogo.png" alt="Login con Spotify" class="login-image">
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    <main>
+        <h1>Comparazione Playlist</h1>
+        <div class="container">
+            <h1>Confronto Playlist: {{ playlist1['name'] }} vs {{ playlist2['name'] }}</h1>
+    
+            <div class="graphs-container">
+                {% for graph_name, graph_html in graphs.items() %}
+                    <div class="graph">
+                        <div class="graph-content">
+                            {{ graph_html | safe }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </main>
 </body>
 </html>

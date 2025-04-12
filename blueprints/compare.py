@@ -141,5 +141,5 @@ def compare_playlists():
     fig.update_layout(barmode="group", title="Release Year Distribution")
     graphs["temporal"] = fig.to_html(include_plotlyjs=False, full_html=False)
 
-    return render_template('compare.html', graphs=graphs, playlist1=playlist1, playlist2=playlist2)
+    return render_template('compare_playlist.html', graphs=graphs, playlist1=playlist1, playlist2=playlist2)
 
