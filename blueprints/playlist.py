@@ -104,8 +104,6 @@ def saved_playlists():
             "image": details["images"][0]["url"] if details["images"] else "/static/images/default_cover.png",
             "analysis": analysis,
         })
-    
-    print(f"Playlists Info: {playlists_info}")
 
     return render_template("saved_playlists.html", playlists=playlists_info)
 
