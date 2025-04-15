@@ -117,40 +117,34 @@ def analyze_playlist_tracks(playlist_id):
 
     df = pd.DataFrame(track_data)
 
-    # 1. Distribuzione temporale dei brani
     fig_years = px.histogram(df.dropna(subset=['release_year']), x="release_year", nbins=20, title="Distribuzione dei brani per anno")
 
-    # 2. Distribuzione della durata
     fig_duration = px.histogram(df, x="duration_ms", nbins=20, title="Distribuzione della durata dei brani (ms)")
 
-    # 3. Distribuzione della popolarità
     fig_popularity = px.histogram(df, x="popularity", nbins=20, title="Distribuzione della popolarità")
 
-    # 4. Distribuzione dei generi
     all_genres = [genre for track in track_data for genre in track["genres"]]
     genre_counts = dict(Counter(all_genres))
 
-    # Creazione del DataFrame dai conteggi dei generi
     genre_counts_df = pd.DataFrame(list(genre_counts.items()), columns=["Genre", "Count"])
 
-    # Creazione del grafico a barre
     fig_genres = px.bar(genre_counts_df, x="Genre", y="Count",
                         labels={"Genre": "Genere", "Count": "Conteggio"},
                         title="Distribuzione dei generi musicali")
 
-    # 5. Evoluzione della popolarità nel tempo
     pop_year = df.dropna(subset=['release_year'])
     fig_trend = px.line(pop_year.sort_values('release_year'), x="release_year", y="popularity",
                         title="Evoluzione della popolarità nel tempo")
 
-    return {
+    return { 
         "fig_years": pio.to_html(fig_years, full_html=False),
         "fig_duration": pio.to_html(fig_duration, full_html=False),
         "fig_popularity": pio.to_html(fig_popularity, full_html=False),
         "fig_genres": pio.to_html(fig_genres, full_html=False),
         "fig_trend": pio.to_html(fig_trend, full_html=False)
-    }
+    } 
 
 
 if __name__ == "__main__":
     app.run(debug=True)
+              
