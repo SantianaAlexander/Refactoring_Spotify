@@ -34,6 +34,19 @@
         .btn-save:hover {
             transform: scale(1.1); 
         }
+        .share-button {
+            padding: 10px 10px;
+            background-color: transparent;
+            color: white;
+            border-radius: 5px;
+            border: 2px solid #1ed760;
+            transition: transform 0.2s ease-in-out;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+            cursor: pointer; 
+        }
+        .share-button:hover{
+            transform: scale(1.1);
+        }
         .imgPlaylist {
             border-radius: 10px;
             margin: 10px;
@@ -127,6 +140,7 @@
                                 <th>Copertina</th>
                                 <th></th>
                                 <th></th>
+                                <th>Condividi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -147,6 +161,9 @@
                                         <button type="submit" class="btn-save">Salva</button>
                                     </form>
                                 </td>
+                                <td>
+                                    <button class="share-button" data-playlist-url="{{ playlist.external_url }}">Condividi</button>
+                                </td>
                             </tr>
                             {% endfor %}
                         </tbody>
@@ -155,4 +172,20 @@
             </main>
         </div>
     </body>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const shareButtons = document.querySelectorAll('.share-button');
+    
+            shareButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const playlistUrl = this.getAttribute('data-playlist-url');
+                    navigator.clipboard.writeText(playlistUrl).then(() => {
+                        alert('Link copiato!');
+                    }).catch(err => {
+                        console.error('Errore nel copiare il link: ', err);
+                    });
+                });
+            });
+        });
+    </script>    
 </html>

@@ -6,3 +6,5 @@ flask_sqlalchemy
 flask_bcrypt
 setuptools_scm
 numpy
+pandas
+plotly
