@@ -28,6 +28,7 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 with app.app_context():
+    db.drop_all()
     db.create_all()
 
 # REGISTRAZIONE DEI BLUEPRINT
@@ -46,6 +47,6 @@ def index():
 def about_us():
     return render_template('about_us.html')
 
-if __name__ == "__main__":
+if __name__ == "__main__":  
     app.run(debug = True, port=5004)
 

@@ -395,9 +395,17 @@ body {
                                 Il tuo browser non supporta l'elemento audio.
                             </audio>
                         {% endif %}
+                        <input type="checkbox" name="selected_tracks" value="{{ track.id }}"><h4>  Aggiungi alla playlist</h4>
                     </li>
                 {% endfor %}
             </ul>
+            <!-- FORM PER CREARE NUOVA PLAYLIST -->
+            <form method="POST" action="{{ url_for('playlist.create_playlist_internal') }}">
+            <h3>Crea una nuova playlist</h3>
+            <input type="text" name="playlist_name" placeholder="Nome della playlist">
+            <textarea name="playlist_description" placeholder="Descrizione della playlist"></textarea>
+            <button type="submit" name="create_playlist" value="true">Crea Playlist</button>
+            </form>
         {% else %}
             <p>Nessun suggerimento trovato. Prova con un altro artista, brano o genere.</p>
         {% endif %}
