@@ -1,3 +1,4 @@
+#IMPORT
 from flask import Blueprint, request, render_template
 import plotly.graph_objects as go
 import plotly.express as px
@@ -10,6 +11,7 @@ compare_bp = Blueprint('compare', __name__)
 
 nosplogin = spotipy.Spotify(client_credentials_manager=sp_oauth)
 
+#FUNZIONE PER PRENDERE I DATI DELLE TRACCE
 def get_tracks_info(playlist_id):
     try:
         playlist = nosplogin.playlist_tracks(playlist_id)
@@ -33,6 +35,7 @@ def get_tracks_info(playlist_id):
         print(f"Error fetching tracks: {e}")
         return []
 
+# FUNZIONE PER PRENDERE I GENERI DELLE TRACCE
 def get_artist_genres(artist_ids):
     genres = []
     for artist_id in artist_ids:
@@ -43,12 +46,14 @@ def get_artist_genres(artist_ids):
             continue
     return genres
 
+#TRACCE COMUNI
 def get_common_tracks(tracks1, tracks2):
     names1 = set([t['name'].lower() for t in tracks1])
     names2 = set([t['name'].lower() for t in tracks2])
     common = names1 & names2
     return common, len(common)
 
+#ARTISTI COMUNI
 def get_common_artists(tracks1, tracks2):
     artists1 = [artist for t in tracks1 for artist in t['artists']]
     artists2 = [artist for t in tracks2 for artist in t['artists']]
@@ -57,11 +62,13 @@ def get_common_artists(tracks1, tracks2):
     freq2 = Counter([a for a in artists2 if a in common])
     return common, freq1, freq2
 
+#POPOLARITà MEDIA
 def get_average_popularity(tracks):
     if not tracks:
         return 0
     return sum([t['popularity'] for t in tracks]) / len(tracks)
 
+#ANNO DI PUBBLICAZIONE
 def get_release_years(tracks):
     years = []
     for t in tracks:
@@ -75,6 +82,7 @@ def get_release_years(tracks):
         years.append(year)
     return Counter(years)
 
+#FUNZIONE COMPARA
 @compare_bp.route('/compare')
 def compare_playlists():
     playlist_ids = request.args.get('playlist_ids')
@@ -93,10 +101,9 @@ def compare_playlists():
     name1 = playlist1['name']
     name2 = playlist2['name']
 
-    # Prepara i grafici
     graphs = {}
 
-    # Grafico per "common_tracks"
+    # GRAFICO COMMON TRACKS
     common_tracks, common_count = get_common_tracks(tracks1, tracks2)
     similarity_percentage = (common_count / (min(len(tracks1), len(tracks2)) + 0.1)) * 100
     fig = go.Figure()
@@ -105,7 +112,7 @@ def compare_playlists():
     fig.update_layout(barmode="group", title=f"Tracks in Common ({similarity_percentage:.2f}%)")
     graphs["common_tracks"] = fig.to_html(include_plotlyjs=False, full_html=False)
 
-    # Grafico per "common_artists"
+    # GRAFICO COMMON ARTISTS
     common_artists, freq1, freq2 = get_common_artists(tracks1, tracks2)
     fig = go.Figure()
     for artist in common_artists:
@@ -113,13 +120,13 @@ def compare_playlists():
     fig.update_layout(barmode="group", title="Common Artists Frequency")
     graphs["common_artists"] = fig.to_html(include_plotlyjs=False, full_html=False)
 
-    # Grafico per "popularity"
+    # GRAFICO POPULARITY
     pop1 = get_average_popularity(tracks1)
     pop2 = get_average_popularity(tracks2)
     fig = px.bar(x=[name1, name2], y=[pop1, pop2], labels={'x': 'Playlist', 'y': 'Average Popularity'}, title="Average Track Popularity")
     graphs["popularity"] = fig.to_html(include_plotlyjs=False, full_html=False)
 
-    # Grafico per "genres"
+    # GRAFICO GENRES
     genre1 = get_artist_genres([aid for t in tracks1 for aid in t['artist_ids']])
     genre2 = get_artist_genres([aid for t in tracks2 for aid in t['artist_ids']])
     genre_freq1 = Counter(genre1)
@@ -131,7 +138,7 @@ def compare_playlists():
     fig.update_layout(barmode="group", title="Top Genres Distribution")
     graphs["genres"] = fig.to_html(include_plotlyjs=False, full_html=False)
 
-    # Grafico per "temporal"
+    # GRAFICO TEMPORALE ANNI DI RILASCIO
     years1 = get_release_years(tracks1)
     years2 = get_release_years(tracks2)
     all_years = sorted(set(years1) | set(years2))

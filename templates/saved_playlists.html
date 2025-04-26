@@ -7,93 +7,93 @@
         <link rel="stylesheet" href="../static/navbar.css">
         <title>Spotify API</title>
     </head>
+    <style>
+        .imgPlaylist {
+            border-radius: 10px;
+            margin: 10px;
+        }
+        table {
+            width: 100%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: #1e1e1e;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        table th, table td {
+            border: 1px solid #333;
+            padding: 15px;
+        }
+        table th {
+            background: #1DB954;
+            color: black;
+        }
+        table tr:nth-child(even) {
+            background: #242424;
+        }
+        table tr:hover {
+            background: #333;
+        }
+        .btn-remove {
+            width: 50%;
+            padding: 10px 10px;
+            background-color: transparent;
+            color: white;
+            border-radius: 5px;
+            border: 2px solid #f44336;
+            transition: transform 0.2s ease-in-out;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+            cursor: pointer; 
+        }
+        .btn-remove:hover {
+            transform: scale(1.1); 
+        }
+        summary {
+            font-weight: bold;
+            cursor: pointer;
+        }
+        details {
+            margin-top: 10px;
+            padding: 10px;
+            background: #333;
+            border-radius: 5px;
+        }
+        details[open] {
+            background: #242424;
+        }
+        .analysis-section {
+            margin-top: 10px;
+        }
+        .popularity-graph, .artists-graph {
+            margin-top: 10px;
+            background-color: #1DB954;
+            padding: 10px;
+            border-radius: 5px;
+            color: white;
+        }
+        .compare-button {
+            position: sticky;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%); 
+            background-color: #4CAF50; 
+            color: white;
+            padding: 15px 30px; 
+            font-size: 18px; 
+            border-radius: 25px;
+            text-decoration: none; 
+            text-align: center; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+            transition: background-color 0.3s ease; 
+        }
+
+        .compare-button:hover {
+            background-color: #45a049;
+        }
+
+    </style>
     <body>
-        <style>
-            .imgPlaylist {
-                border-radius: 10px;
-                margin: 10px;
-            }
-            table {
-                width: 100%;
-                margin: 20px auto;
-                border-collapse: collapse;
-                background: #1e1e1e;
-                border-radius: 10px;
-                overflow: hidden;
-            }
-            table th, table td {
-                border: 1px solid #333;
-                padding: 15px;
-            }
-            table th {
-                background: #1DB954;
-                color: black;
-            }
-            table tr:nth-child(even) {
-                background: #242424;
-            }
-            table tr:hover {
-                background: #333;
-            }
-            .btn-remove {
-                width: 50%;
-                padding: 10px 10px;
-                background-color: transparent;
-                color: white;
-                border-radius: 5px;
-                border: 2px solid #f44336;
-                transition: transform 0.2s ease-in-out;
-                text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
-                cursor: pointer; 
-            }
-            .btn-remove:hover {
-                transform: scale(1.1); 
-            }
-            summary {
-                font-weight: bold;
-                cursor: pointer;
-            }
-            details {
-                margin-top: 10px;
-                padding: 10px;
-                background: #333;
-                border-radius: 5px;
-            }
-            details[open] {
-                background: #242424;
-            }
-            .analysis-section {
-                margin-top: 10px;
-            }
-            .popularity-graph, .artists-graph {
-                margin-top: 10px;
-                background-color: #1DB954;
-                padding: 10px;
-                border-radius: 5px;
-                color: white;
-            }
-            .compare-button {
-                position: -webkit-sticky; /* Per Safari */
-                position: sticky;
-                bottom: 20px; /* Distanza dal fondo */
-                left: 50%; /* Centra il bottone orizzontalmente */
-                transform: translateX(-50%); /* Correzione per centraggio preciso */
-                background-color: #4CAF50; /* Colore di sfondo del bottone */
-                color: white; /* Colore del testo */
-                padding: 15px 30px; /* Padding per rendere il bottone più grande */
-                font-size: 18px; /* Dimensione del testo */
-                border-radius: 25px; /* Bordo stondato */
-                text-decoration: none; /* Rimuove la sottolineatura dal link */
-                text-align: center; /* Centra il testo */
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ombra del bottone per un effetto di profondità */
-                transition: background-color 0.3s ease; /* Transizione per il cambio di colore al passaggio del mouse */
-            }
-
-            .compare-button:hover {
-                background-color: #45a049; /* Colore di sfondo quando il mouse passa sopra */
-            }
-
-        </style>
+        <!-- NAVBAR -->
         <nav class="navbar">
             <a href="{{ url_for('home.home') }}" class="home-btn">
                 <img src="/static/images/homeLogo.png" alt="Home" class="home-image">
@@ -128,6 +128,7 @@
                 {% endif %}
             </ul>
         </nav>
+        <!-- MAIN SECTION -->
         <main>
             <h1>Le mie playlist salvate</h1>
             {% if playlists %}
@@ -192,42 +193,37 @@
             </a>  
         </main>
     </body>
+    <!-- JAVASCRIPT - BOTTONE COMPARE -->
     <script> 
         document.addEventListener("DOMContentLoaded", function() {
             const compareButton = document.getElementById("compare-button");
-            const checkboxes = document.querySelectorAll('input[name="playlist_ids"]'); // Seleziona tutte le checkbox
+            const checkboxes = document.querySelectorAll('input[name="playlist_ids"]');
         
             function checkPlaylistSelection() {
-                // Conta le checkbox selezionate
                 const selectedCheckboxes = Array.from(checkboxes).filter(checkbox => checkbox.checked);
         
-                if (selectedCheckboxes.length === 2) {  // Se sono selezionate esattamente due playlist
-                    // Costruisci l'URL per il bottone "Compara"
+                if (selectedCheckboxes.length === 2) { 
                     const playlistIds = selectedCheckboxes.map(checkbox => checkbox.value).join(',');
                     compareButton.href = `{{ url_for('compare.compare_playlists') }}?playlist_ids=${playlistIds}`;
-                    compareButton.style.pointerEvents = 'auto';  // Abilita il clic sul bottone
-                    compareButton.style.opacity = 1;  // Rende il bottone visibile e attivo
+                    compareButton.style.pointerEvents = 'auto'; 
+                    compareButton.style.opacity = 1;  
                 } else {
-                    compareButton.href = "#";  // Disabilita il collegamento
-                    compareButton.style.pointerEvents = 'none';  // Disabilita il clic sul bottone
-                    compareButton.style.opacity = 0.5;  // Rende il bottone "spent" e disattivato
+                    compareButton.href = "#";  
+                    compareButton.style.pointerEvents = 'none'; 
+                    compareButton.style.opacity = 0.5;  
                 }
             }
     
-            // Aggiungi i listener per monitorare le modifiche nelle checkbox
             checkboxes.forEach(checkbox => checkbox.addEventListener("change", checkPlaylistSelection));
         
-            // Chiamato per la prima volta per impostare correttamente lo stato del bottone
             checkPlaylistSelection();
     
-            // Aggiungi listener per il click del bottone "Compara"
             compareButton.addEventListener('click', function(event) {
-                // Prevenire il comportamento predefinito del link (reindirizzamento)
                 event.preventDefault();
                 const url = compareButton.href;
-                console.log(`Generated URL: ${url}`);  // Log dell'URL generato per il confronto
+                console.log(`Generated URL: ${url}`);
                 if (url !== "#") {
-                    window.location.href = url;  // Forza il reindirizzamento manuale
+                    window.location.href = url; 
                 }
             });
         });

@@ -1,3 +1,4 @@
+#IMPORT
 from flask import Flask, redirect, url_for, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user
@@ -11,6 +12,7 @@ from blueprints.spotify import spotify_bp
 from blueprints.compare import compare_bp
 from blueprints.suggested import suggested_bp
 
+# CONFIGURAZIONE PRINCIPALE DELL'APPLICAZIONE FLASK, DATABASE SQLALCHEMY, GESTIONE SESSIONE E LOGIN
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///spotipy.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -28,6 +30,7 @@ def load_user(user_id):
 with app.app_context():
     db.create_all()
 
+# REGISTRAZIONE DEI BLUEPRINT
 app.register_blueprint(auth_bp)
 app.register_blueprint(home_bp)
 app.register_blueprint(playlist_bp)

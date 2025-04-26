@@ -7,8 +7,7 @@
         <link rel="stylesheet" href="../static/navbar.css">
         <title>Spotify API</title>
     </head>
-    <body>
-        <style>
+    <style>
         .btn {
             text-decoration: none;
             color: #1ed760;
@@ -74,6 +73,7 @@
             background: #333;
         }
         </style>
+    <body>
         <!-- NAVBAR -->
         <nav class="navbar">
             <a href="{{ url_for('home.home') }}" class="home-btn">
@@ -96,6 +96,7 @@
                 {% endif %}
             </ul>
         </nav>
+        <!-- MAIN SECTION -->
         <div class="bg-container">
             <main class="pt-5">
                 <h1 style="text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);">
@@ -132,6 +133,7 @@
                     <a href="{{ url_for('spotify.spotify_login') }}" class="btn">Login con Spotify</a>
                 {% endif %}
 
+                <!-- RISULTATI -->
                 {% if query %}
                     <h2 style="padding-top: 5px; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);">Risultati per: "{{ query }}"</h2>
                     <table>

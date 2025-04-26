@@ -16,9 +16,8 @@
     gap: 20px;
     }
 
-    /* Singolo grafico */
     .graph {
-        width: 48%;  /* Per mantenere due grafici su ogni riga */
+        width: 48%;  
         padding: 20px;
         background-color: #f0f0f0;
         border-radius: 10px;
@@ -28,12 +27,13 @@
 
     .graph-content {
         width: 100%;
-        height: 400px; /* Puoi regolare l'altezza del grafico se necessario */
+        height: 400px;
         overflow: hidden;
         border-radius: 10px;
     }
 </style>
 <body>
+    <!-- NAVBAR -->
     <nav class="navbar">
         <a href="{{ url_for('home.home') }}" class="home-btn">
             <img src="/static/images/homeLogo.png" alt="Home" class="home-image">
@@ -68,11 +68,13 @@
             {% endif %}
         </ul>
     </nav>
+    <!-- MAIN SECTION -->
     <main>
         <h1>Comparazione Playlist</h1>
         <div class="container">
             <h1>Confronto Playlist: {{ playlist1['name'] }} vs {{ playlist2['name'] }}</h1>
     
+            <!-- GRAFICI -->
             <div class="graphs-container">
                 {% for graph_name, graph_html in graphs.items() %}
                     <div class="graph">

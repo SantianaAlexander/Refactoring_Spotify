@@ -1,3 +1,4 @@
+#IMPORT
 from flask import Blueprint, redirect, request, url_for, render_template
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -6,6 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 auth_bp = Blueprint('auth', __name__)
 
+#ENDPOINT REGISTER
 @auth_bp.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -22,6 +24,7 @@ def register():
         return redirect(url_for('home.home'))
     return render_template('register.html', error=None)
 
+#ENDPOINT LOGIN
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -35,6 +38,7 @@ def login():
             return render_template('login.html', error="Credenziali non valide.")
     return render_template('login.html', error=None)
 
+#ENDPOINT LOGOUT
 @auth_bp.route('/logout')
 @login_required
 def logout():

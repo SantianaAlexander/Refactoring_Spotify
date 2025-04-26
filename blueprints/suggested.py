@@ -1,3 +1,4 @@
+#IMPORT
 from flask import Blueprint, request, render_template
 import spotipy
 from services.spotify_oauth import sp_oauth
@@ -6,15 +7,14 @@ suggested_bp = Blueprint('suggested', __name__)
 
 nosplogin = spotipy.Spotify(client_credentials_manager=sp_oauth)
 
+# FUNZIONE PER OTTENERE SUGGERIMENTI DI BRANI BASATI SU ARTISTA, BRANO O GENERE
 def get_suggestions(artist_name=None, track_name=None, genre=None):
     try:
-        # Ricerca per artista
         if artist_name:
             results = nosplogin.search(q=f"artist:{artist_name}", type="artist", limit=1)
             if results['artists']['items']:
                 artist = results['artists']['items'][0]
                 artist_id = artist['id']
-                # Restituire i brani di questo artista
                 tracks = nosplogin.artist_top_tracks(artist_id)
                 suggestions = []
                 for track in tracks['tracks']:
@@ -29,7 +29,6 @@ def get_suggestions(artist_name=None, track_name=None, genre=None):
                     suggestions.append(suggestion)
                 return suggestions
 
-        # Ricerca per brano
         elif track_name:
             results = nosplogin.search(q=f"track:{track_name}", type="track", limit=5)
             suggestions = []
@@ -45,7 +44,6 @@ def get_suggestions(artist_name=None, track_name=None, genre=None):
                 suggestions.append(suggestion)
             return suggestions
 
-        # Ricerca per genere
         elif genre:
             results = nosplogin.search(q=f"genre:{genre}", type="track", limit=5)
             suggestions = []
@@ -66,6 +64,7 @@ def get_suggestions(artist_name=None, track_name=None, genre=None):
         print(f"Error fetching suggestions: {e}")
         return []
 
+# ROTTA PER VISUALIZZARE I SUGGERIMENTI BASATI SULL'INPUT DELL'UTENTE
 @suggested_bp.route('/suggested', methods=['GET', 'POST'])
 def suggested_tracks():
     if request.method == 'POST':

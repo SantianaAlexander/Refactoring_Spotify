@@ -1,8 +1,8 @@
+#IMPORT
 from flask import Blueprint, redirect, request, url_for, session, render_template
 from services.spotify_oauth import sp_oauth, get_spotify_object
 from services.spotify_client import get_spotify_client
 from flask_login import login_required, current_user
-
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 
@@ -25,6 +25,7 @@ def get_user_playlists(user_id):
     playlists = sp.user_playlists(user_id)
     return playlists['items']
 
+# ROTTA PRINCIPALE CHE GESTISCE LA HOME E LA RICERCA DI PLAYLIST
 @home_bp.route('/home', methods=['GET', 'POST'])
 def home():
     sp = get_spotify_client()
@@ -73,7 +74,7 @@ def home():
 
     return render_template('home.html', user_info=user_info, playlists=playlists, profile_pic_url=profile_pic_url, query = query, search_results = search_results, username=current_user.username)
 
-
+# RICERCA PLAYLIST SU SPOTIFY IN BASE A UNA QUERY INSERITA DALL'UTENTE
 @home_bp.route('/playlist/<playlist_id>')
 def visualizza_playlist(playlist_id):
     sp = get_spotify_client()

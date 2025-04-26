@@ -1,8 +1,10 @@
+#IMPORT
 from flask import session
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth, SpotifyClientCredentials
 from services.spotify_oauth import sp_oauth
 
+# FUNZIONE PER OTTENERE UN CLIENT SPOTIFY AUTENTICATO 
 def get_spotify_client():
     if "token_info" in session:
         token_info = session["token_info"]

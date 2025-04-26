@@ -1,3 +1,4 @@
+#IMPORT
 from flask import Flask
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
@@ -12,6 +13,7 @@ app = Flask(__name__)
 client_credentials_manager = SpotifyClientCredentials(client_id='YOUR_SPOTIFY_CLIENT_ID', client_secret='YOUR_SPOTIFY_CLIENT_SECRET')
 sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
+# FUNZIONE PER ANALIZZARE UNA PLAYLIST E GENERARE GRAFICI SULLA POPOLARITÀ, PRESENZA ARTISTI E DISTRIBUZIONE ARTISTICA
 def analyze_and_visualize(playlist_id):
     sp = get_spotify_client()
     results = sp.playlist_tracks(playlist_id)
@@ -56,6 +58,7 @@ def analyze_and_visualize(playlist_id):
         "fig_pie_chart": fig_pie_chart.to_html(full_html=False)
     }
 
+# FUNZIONE PER ESTRARRE I DATI DEI BRANI DA UNA PLAYLIST
 def get_tracks_from_playlist(playlist_id):
     results = sp.playlist_tracks(playlist_id)
     tracks = []
@@ -75,6 +78,7 @@ def get_tracks_from_playlist(playlist_id):
         tracks.append(track_info)
     return tracks
 
+# FUNZIONE PER ANALIZZARE I BRANI DI UNA PLAYLIST (ANNO DI USCITA, DURATA, POPOLARITÀ, GENERI) E GENERARE GRAFICI APPROFONDITI 
 def analyze_playlist_tracks(playlist_id):
     sp = get_spotify_client()
     results = sp.playlist_tracks(playlist_id)
@@ -100,7 +104,6 @@ def analyze_playlist_tracks(playlist_id):
         artist_name = main_artist.get("name")
         artist_id = main_artist.get("id")
 
-        # Recupera i generi dell'artista (solo se l'id esiste)
         genres = []
         if artist_id:
             artist_info = sp.artist(artist_id)

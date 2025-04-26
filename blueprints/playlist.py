@@ -1,3 +1,4 @@
+#IMPORT
 from flask import Blueprint, redirect, request, url_for, session, flash, jsonify
 from flask import Blueprint, redirect, request, url_for, session, render_template
 from flask_login import login_required, current_user
@@ -20,6 +21,7 @@ def get_spotify_client():
         client_secret="9d1c008a6aaa4a969b178224406d5a73" 
     ))
 
+# ROTTA PER MOSTRARE LE PLAYLIST DELL'UTENTE
 @playlist_bp.route('/playlist')
 def playlist():
     token_info = session.get('token_info', None)
@@ -37,20 +39,18 @@ def playlist():
 
     return render_template('playlist.html', playlists=playlists_info, profile_pic_url=profile_pic_url)
 
+# ROTTA PER VISUALIZZARE I DETTAGLI DI UNA PLAYLIST PUBBLICA
 @playlist_bp.route("/public_playlist/<playlist_id>")
 def public_playlist_details(playlist_id):
     sp = get_spotify_client()
 
-    # Ottieni i dettagli della playlist
     playlist_details = sp.playlist(playlist_id)
     tracks = sp.playlist_tracks(playlist_id)["items"]
 
-    # Estrai i dati dei brani in un formato adatto all’analisi
     track_data = []
     for item in tracks:
         track = item["track"]
-        if track:  # Evita elementi nulli
-            # Opzionalmente, recupera i generi del primo artista
+        if track: 
             artist_id = track["artists"][0]["id"]
             artist_data = sp.artist(artist_id)
             genres = artist_data.get("genres", [])
@@ -65,19 +65,16 @@ def public_playlist_details(playlist_id):
                 "genres": genres
             })
 
-    # Genera i grafici con Plotly
     grafici = analyze_playlist_tracks(playlist_id)
 
-    # Recupera immagine del profilo utente se disponibile
     profile_pic_url = None
     try:
         user_info = sp.current_user()
         if user_info.get("images"):
             profile_pic_url = user_info["images"][0]["url"]
     except:
-        pass  # L'utente potrebbe essere anonimo
+        pass 
 
-    # Renderizza il template con i dati e i grafici
     return render_template(
         "public_playlist_details.html",
         playlist=playlist_details,
@@ -86,6 +83,7 @@ def public_playlist_details(playlist_id):
         grafici=grafici
     )
 
+# ROTTA PER MOSTRARE LE PLAYLIST SALVATE DALL'UTENTE
 @playlist_bp.route("/saved_playlists")
 @login_required
 def saved_playlists():
@@ -107,6 +105,7 @@ def saved_playlists():
 
     return render_template("saved_playlists.html", playlists=playlists_info)
 
+# ROTTA PER AGGIUNGERE UNA PLAYLIST ALLA LISTA SALVATA DELL'UTENTE
 @playlist_bp.route("/add_playlist/<playlist_id>", methods=["POST"])
 @login_required
 def add_playlist(playlist_id):
@@ -137,6 +136,7 @@ def add_playlist(playlist_id):
     
     return redirect(url_for("playlist.saved_playlists"))
 
+# ROTTA PER RIMUOVERE UNA PLAYLIST DALLA LISTA SALVATA DELL'UTENTE
 @playlist_bp.route("/delete_playlist/<playlist_id>", methods=["POST"])
 @login_required
 def delete_playlist(playlist_id):
