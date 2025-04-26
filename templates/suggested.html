@@ -345,6 +345,58 @@
             50% { width: 80%; }
             100% { width: 0; }
         }
+        .formcreate {
+    background-color: #121212;
+    padding: 30px;
+    border-radius: 20px;
+    max-width: 500px;
+    margin: 50px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .formcreate h3 {
+        color: #ffffff;
+        margin-bottom: 10px;
+        font-size: 22px;
+        text-align: center;
+    }
+
+    .formcreate input[type="text"],
+    .formcreate textarea {
+        padding: 12px 15px;
+        border: none;
+        border-radius: 15px;
+        background-color: #282828;
+        color: #ffffff;
+        font-size: 16px;
+        resize: none;
+        outline: none;
+        transition: background-color 0.3s;
+    }
+
+    .formcreate input[type="text"]:focus,
+    .formcreate textarea:focus {
+        background-color: #333333;
+    }
+
+    .formcreate button {
+        padding: 12px;
+        background-color: #1DB954;
+        color: white;
+        border: none;
+        border-radius: 15px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .formcreate button:hover {
+        background-color: #17a74a;
+    }
 </style>
 <!-- BODY -->
     <body>
@@ -388,7 +440,7 @@
             <h1>Playlist Suggerite</h1>
 
             <!-- BARRE DI RCARCA -->
-            <form class="search-form" method="POST">
+            <form class="search-form" method="POST" style="gap: calc(20px + 10%);">
                 <label for="artist_name">Artista:</label>
                 <input type="text" name="artist_name" id="artist_name" placeholder="Nome Artista">
                 
@@ -407,31 +459,37 @@
             <!-- RISULTATI -->
             {% if recommendations %}
             <h2>Risultati per {{ seed_type }}:</h2>
-            <ul class="track-list">
-                {% for track in recommendations %}
-                    <li class="track-item">
-                        <img src="{{ track['image'] }}" alt="Album cover" width="100">
-                        <a href="{{ track['external_url'] }}" target="_blank" class="track-link">
-                            <span class="track-name">{{ track['name'] }}</span> - 
-                            <span class="artist-name">{{ track['artist'] }}</span>
-                        </a>
-                        {% if track['preview_url'] %}
-                            <audio controls>
-                                <source src="{{ track['preview_url'] }}" type="audio/mpeg">
-                                Il tuo browser non supporta l'elemento audio.
-                            </audio>
-                        {% endif %}
-                        <input type="checkbox" name="selected_tracks" value="{{ track.id }}"><h4>  Aggiungi alla playlist</h4>
-                    </li>
-                {% endfor %}
-            </ul>
             <!-- FORM PER CREARE NUOVA PLAYLIST -->
-            <form method="POST">
-            <h3>Crea una nuova playlist</h3>
-            <input type="text" name="playlist_name" placeholder="Nome della playlist">
-            <textarea name="playlist_description" placeholder="Descrizione della playlist"></textarea>
-            <button type="submit" name="create_playlist" value="true">Crea Playlist</button>
-            </form>
+            <form action="{{ url_for('playlist.create_user_playlist') }}" method="POST">
+                <label for="playlist_name">Nome Playlist:</label>
+                <input type="text" name="playlist_name" id="playlist_name" required>
+            
+                <label for="playlist_description">Descrizione Playlist:</label>
+                <input type="text" name="playlist_description" id="playlist_description">
+            
+                <h2>Seleziona le tracce da aggiungere alla playlist:</h2>
+                <ul class="track-list">
+                    {% for track in recommendations %}
+                        <li class="track-item">
+                            <img src="{{ track['image'] }}" alt="Album cover" width="100">
+                            <a href="{{ track['external_url'] }}" target="_blank" class="track-link">
+                                <span class="track-name">{{ track['name'] }}</span> - 
+                                <span class="artist-name">{{ track['artist'] }}</span>
+                            </a>
+                            {% if track['preview_url'] %}
+                                <audio controls>
+                                    <source src="{{ track['preview_url'] }}" type="audio/mpeg">
+                                    Il tuo browser non supporta l'elemento audio.
+                                </audio>
+                            {% endif %}
+                            <!-- Checkbox con valore ID e nome della traccia -->
+                            <input type="checkbox" name="selected_tracks" value="{{ track.id }}" data-name="{{ track.name }}">
+                            <label for="track-{{ track.id }}">{{ track.name }} - Aggiungi alla playlist</label>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <button type="submit" style="background-color: #17a74a; color: white; border-radius: 10px; cursor: pointer; padding: 10px;">Crea Playlist</button>
+            </form>          
         {% else %}
             <p>Nessun suggerimento trovato. Prova con un altro artista, brano o genere.</p>
         {% endif %}

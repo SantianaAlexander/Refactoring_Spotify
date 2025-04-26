@@ -82,23 +82,34 @@
               <th>Generi</th>
             </tr>
           </thead>
-        <tbody>
-            {% for track in tracks %}
-                <tr>
-                    <td>{{ track.name }}</td>
-                    <td>{{ track.artists }}</td>
-                    <td>{{ track.album }}</td>
-                    <td>{{ track.popularity }}</td>
-                    <td>{{ track.duration_ms }}</td>
-                    <td>{{ track.release_date }}</td>
-                    <td>
-                        {% for genre in track.genres %}
-                            <span class="badge bg-secondary">{{ genre }}</span>
-                        {% endfor %}
-                    </td>
-                </tr>
-            {% endfor %}
+          <tbody>
+            {% if tracks %}
+                {% for track in tracks %}
+                    <tr>
+                        <td>{{ track.name }}</td>
+                        <td>{{ track.artists }}</td>
+                        <td>{{ track.album }}</td>
+                        <td>{{ track.popularity }}</td>
+                        <td>{{ track.duration_ms }}</td>
+                        <td>{{ track.release_date }}</td>
+                        <td>
+                            {% for genre in track.genres %}
+                                <span class="badge bg-secondary">{{ genre }}</span>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% elif usertracks %}
+                {% for track in usertracks %}
+                    <tr>
+                        <td>{{ track.name }}</td>
+                        <td colspan="6" style="text-align: center;">Brano creato dall'utente</td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
         </tbody>
+    </table>
+
     </table>
     <div class="charts-container">
         <h2>Analisi della Playlist</h2>

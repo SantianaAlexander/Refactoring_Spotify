@@ -154,7 +154,7 @@
                             </td>
                             <td><a href="{{ url_for('playlist.public_playlist_details', playlist_id=playlist['id']) }}" style="color: white;">Vedi Brani</a></td>
                             <td>
-                                <form action="{{ url_for('playlist.delete_playlist', playlist_id=playlist.id) }}" method="POST" style="display:inline;">
+                                <form action="{{ url_for('playlist.delete_playlist', playlist_id=playlist.id) }}" method="POST">
                                     <button type="submit" class="btn-remove">Rimuovi</button>
                                 </form>
                             </td>
