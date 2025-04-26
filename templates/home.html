@@ -112,6 +112,8 @@
                 <br>
                 <p style="text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);">Dai un'occhiata alle playlist che hai salvato!</p>
                 <a href="{{ url_for('playlist.saved_playlists') }}" class="btn" style="text-decoration: none; color: white;">Playlist Salvate</a>
+                <br>
+                <a href="{{ url_for('suggested.suggested_tracks') }}" class="btn" style="text-decoration: none; color: white;">Playlist Suggerite</a>
                 {% if session['token_info'] %}
                     <br>
                     {% if selected_playlist %}
