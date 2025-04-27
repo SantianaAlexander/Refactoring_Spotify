@@ -85,14 +85,14 @@
 
         .progress-bar {
             height: 100%;
-            width: 0;
+            width: 100%;
             background-color: #1DB954; 
             animation: loading 2s linear infinite;
         }
 
         @keyframes loading {
             0% { width: 0; }
-            50% { width: 80%; }
+            50% { width: 100%; }
             100% { width: 0; }
         }
         </style>
@@ -185,7 +185,7 @@
                                         Nessuna immagine
                                     {% endif %}
                                 </td>
-                                <td><a href="{{ url_for('playlist.public_playlist_details', playlist_id=playlist['id']) }}" style="color: white;">Vedi Brani</a></td>
+                                <td><a href="{{ url_for('playlist.public_playlist_details', playlist_id=playlist['id']) }}" class="btn-see-tracks" style="color: white;">Vedi Brani</a></td>
                                 <td>
                                     <form action="{{ url_for('playlist.add_playlist', playlist_id=playlist.id) }}" method="POST">
                                         <button type="submit" class="btn-save">Salva</button>
@@ -203,11 +203,40 @@
         </div>
     </body>
     <script>
-        const form = document.querySelector('.search-form');
-        const loadingBar = document.getElementById('loading-bar');
-    
-        form.addEventListener('submit', function() {
-            loadingBar.style.display = 'block'; 
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('.search-form');
+            const loadingBar = document.getElementById('loading-bar');
+            
+            // Mostra la barra di caricamento quando si invia il form di ricerca
+            form.addEventListener('submit', function() {
+                loadingBar.style.display = 'block'; 
+            });
+
+            // Aggiungi l'evento di caricamento per i bottoni di salvataggio e di visualizzazione dei brani
+            const saveButtons = document.querySelectorAll('.btn-save');
+            const shareButtons = document.querySelectorAll('.share-button');
+            const viewButtons = document.querySelectorAll('.btn-see-tracks');
+
+            // Per i bottoni di salvataggio (Salva playlist)
+            saveButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    loadingBar.style.display = 'block'; 
+                });
+            });
+
+            // Per i bottoni di condivisione (Condividi playlist)
+            shareButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    loadingBar.style.display = 'block'; 
+                });
+            });
+
+            // Per i bottoni di visualizzazione dei brani (Vedi Brani)
+            viewButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    loadingBar.style.display = 'block'; 
+                });
+            });
         });
     </script>
     <script>
