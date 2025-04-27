@@ -96,7 +96,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.6); /* Grigio scuro trasparente */
+            background-color: rgba(0, 0, 0, 0.6); 
             z-index: 9998;
             display: none;
         }
@@ -109,7 +109,7 @@
             width: 30px;
             height: 30px;
             border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top: 4px solid #00BFFF; /* Azzurro brillante per lo spinner */
+            border-top: 4px solid #00BFFF;
             border-radius: 50%;
             animation: spin 1s linear infinite;
             display: none;
@@ -239,19 +239,16 @@
             spinner.classList.add('loading-spinner');
             document.body.appendChild(spinner);
     
-            // Funzione per mostrare l'overlay e lo spinner
             function showLoading() {
-                overlay.style.display = 'block'; // Mostra l'overlay
-                spinner.style.display = 'block'; // Mostra lo spinner
+                overlay.style.display = 'block';
+                spinner.style.display = 'block'; 
             }
     
-            // Funzione per nascondere l'overlay e lo spinner
             function hideLoading() {
-                overlay.style.display = 'none'; // Nascondi l'overlay
-                spinner.style.display = 'none'; // Nascondi lo spinner
+                overlay.style.display = 'none'; 
+                spinner.style.display = 'none'; 
             }
-    
-            // Funzione per gestire la selezione delle playlist
+
             function checkPlaylistSelection() {
                 const selectedCheckboxes = Array.from(checkboxes).filter(checkbox => checkbox.checked);
             
@@ -267,45 +264,37 @@
                 }
             }
     
-            // Ascolta i cambiamenti sui checkbox
             checkboxes.forEach(checkbox => checkbox.addEventListener("change", checkPlaylistSelection));
     
-            // Verifica la selezione all'inizio
             checkPlaylistSelection();
     
-            // Gestione del click sul bottone "Compara"
             compareButton.addEventListener('click', function(event) {
                 event.preventDefault();
                 const url = compareButton.href;
                 console.log(`Generated URL: ${url}`);
     
-                // Se l'URL è valido, mostra l'overlay e lo spinner, poi esegui il redirect
                 if (url !== "#") {
-                    showLoading(); // Mostra lo spinner e l'overlay
+                    showLoading(); 
                     setTimeout(function() {
-                        window.location.href = url; // Redirect dopo 1 secondo
-                    }, 1000); // 1 secondo di ritardo per vedere lo spinner
+                        window.location.href = url; 
+                    }, 1000); 
                 }
             });
     
-            // Gestione dei form "Rimuovi" con lo spinner
             const removeForms = document.querySelectorAll('.remove-form');
             removeForms.forEach(form => {
                 form.addEventListener('submit', function(event) {
-                    // Mostra l'overlay e lo spinner quando il form viene inviato
-                    overlay.style.display = 'block'; // Mostra l'overlay
+                    overlay.style.display = 'block';
                     const spinner = form.querySelector('.loading-spinner');
-                    spinner.style.display = 'block'; // Mostra lo spinner
+                    spinner.style.display = 'block';
     
-                    // Disabilita il bottone per evitare clic multipli
                     const button = form.querySelector('.btn-remove');
                     button.disabled = true;
     
-                    // Aspetta un po' prima di inviare il form
-                    event.preventDefault(); // Impedisce l'invio immediato
+                    event.preventDefault();
                     setTimeout(() => {
-                        form.submit(); // Invia il form dopo il delay
-                    }, 1000); // Delay di 1 secondo
+                        form.submit(); 
+                    }, 1000); 
                 });
             });
         });
