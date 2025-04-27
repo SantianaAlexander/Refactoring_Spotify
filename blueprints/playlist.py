@@ -39,7 +39,7 @@ def playlist():
 
     return render_template('playlist.html', playlists=playlists_info, profile_pic_url=profile_pic_url)
 
-# ROTTA PER VISUALIZZARE I DETTAGLI DI UNA PLAYLIST PUBBLICA
+# ROTTA PER VISUALIZZARE I DETTAGLI DI UNA PLAYLIST
 @playlist_bp.route("/public_playlist/<playlist_id>")
 @login_required
 def public_playlist_details(playlist_id):
