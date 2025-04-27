@@ -46,5 +46,4 @@ class UserPlaylistTrack(db.Model):
     user_playlist_id = db.Column(db.Integer, db.ForeignKey('user_playlist.id'), nullable=False)
     track_id = db.Column(db.String(100), nullable=False)
 
-    # Unique constraint to prevent the same track from being added twice
     __table_args__ = (db.UniqueConstraint('user_playlist_id', 'track_id', name='unique_track_per_playlist'),)

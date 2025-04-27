@@ -1,4 +1,4 @@
-#IMPORT
+# IMPORT
 from flask import Blueprint, redirect, request, url_for, session, flash, jsonify
 from flask import Blueprint, redirect, request, url_for, session, render_template
 from flask_login import login_required, current_user
@@ -48,18 +48,16 @@ def public_playlist_details(playlist_id):
     track_data = []
     usertrack_data = []
 
-    # Prima controlliamo se è una playlist creata dall'utente
     user_playlist = UserPlaylist.query.filter_by(id=playlist_id).first()
-
+    
+    # CONTROLLO PLAYLIST CREATA DALL'UTENTE
     if user_playlist:
-        # È una playlist creata sul sito
         tracks = UserPlaylistTrack.query.filter_by(user_playlist_id=user_playlist.id).all()
         
         for track in tracks:
-            # Recupera il nome della traccia tramite track_id (che è l'ID Spotify)
-            track_info = sp.track(track.track_id)  # Usa il client Spotify per ottenere il nome della traccia
+            track_info = sp.track(track.track_id) 
             usertrack_data.append({
-                "name": track_info["name"],  # Usa il nome effettivo della traccia
+                "name": track_info["name"],
                 "artist": ", ".join(artist["name"] for artist in track_info["artists"]),
                 "album": track_info["album"]["name"],
                 "popularity": track_info.get("popularity", 0),
@@ -70,12 +68,12 @@ def public_playlist_details(playlist_id):
         playlist_details = {
             "name": user_playlist.name,
             "description": user_playlist.description,
-            "images": [],  # Nessuna immagine
+            "images": [], 
         }
         grafici = None
 
     else:
-        # È una playlist Spotify
+        # PLAYLIST SPOTIFY
         playlist_details = sp.playlist(playlist_id)
         tracks = sp.playlist_tracks(playlist_id)["items"]
 
@@ -128,7 +126,7 @@ def saved_playlists():
     sp = get_spotify_client()
     playlists_info = []
 
-    # Gestione delle playlist salvate da Spotify
+    # PLAYLIST SALVATE DA SPOTIFY
     for playlist in saved_playlists:
         details = sp.playlist(playlist.spotify_id)
         tracks = sp.playlist_tracks(playlist.spotify_id)['items']
@@ -138,17 +136,17 @@ def saved_playlists():
             "name": details["name"],
             "image": details["images"][0]["url"] if details["images"] else "/static/images/default_cover.png",
             "analysis": analysis,
-            "created": False,  # Indica che questa playlist è salvata da Spotify
+            "created": False,
         })
 
-    # Gestione delle playlist create dall'utente
+    # PLAYLIST CREATE DAL'UTENTE
     for playlist in created_playlists:
         playlists_info.append({
-            "id": playlist.id,  # Usa l'ID interno del database per le playlist create
+            "id": playlist.id,  
             "name": playlist.name,
-            "image": "/static/images/default_cover.png",  # Puoi decidere se aggiungere un'immagine per le playlist create
-            "analysis": None,  # Puoi lasciare l'analisi vuota se non hai bisogno di analizzare le playlist create
-            "created": True,  # Indica che questa playlist è stata creata dall'utente
+            "image": "/static/images/default_cover.png", 
+            "analysis": None, 
+            "created": True, 
         })
 
     return render_template("saved_playlists.html", playlists=playlists_info)
@@ -210,28 +208,25 @@ def delete_playlist(playlist_id):
     
     return redirect(url_for('playlist.saved_playlists'))
 
+# FUNZIONE PER LA CREAZIONE DI UNA NUOVA PLAYLIST (aggiunta al db)
 @playlist_bp.route("/create_user_playlist", methods=["POST"])
 @login_required
 def create_user_playlist():
     playlist_name = request.form['playlist_name']
     playlist_description = request.form['playlist_description']
     
-    # Crea una nuova playlist per l'utente
     new_playlist = UserPlaylist(
         name=playlist_name,  
         description=playlist_description,
         user_id=current_user.id
     )
     
-    # Aggiungi la playlist al database e salva
     db.session.add(new_playlist)
-    db.session.commit()  # Salva la playlist prima di aggiungere le tracce
+    db.session.commit()  
 
-    # Recupera le tracce selezionate dal form
-    selected_tracks = request.form.getlist('selected_tracks')  # Recupera tutte le tracce selezionate
-    track_names = request.form.getlist('selected_tracks_name')  # Recupera i nomi delle tracce
+    selected_tracks = request.form.getlist('selected_tracks') 
+    track_names = request.form.getlist('selected_tracks_name')
     
-    # Aggiungi le tracce selezionate alla playlist
     for track_id, track_name in zip(selected_tracks, track_names):
         new_track = UserPlaylistTrack(
             user_playlist_id=new_playlist.id,
@@ -239,7 +234,7 @@ def create_user_playlist():
         )
         db.session.add(new_track)
     
-    db.session.commit()  # Salva tutte le tracce nella playlist
+    db.session.commit() 
 
     flash("Playlist creata con successo!", "success")
     return redirect(url_for('playlist.saved_playlists'))
