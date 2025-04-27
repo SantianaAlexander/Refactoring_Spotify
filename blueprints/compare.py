@@ -2,19 +2,18 @@
 from flask import Blueprint, request, render_template
 import plotly.graph_objects as go
 import plotly.express as px
-from services.spotify_oauth import sp_oauth
+from services.spotify_client import get_spotify_client
 import spotipy
 from collections import Counter
 from datetime import datetime
 
 compare_bp = Blueprint('compare', __name__)
 
-nosplogin = spotipy.Spotify(client_credentials_manager=sp_oauth)
-
 #FUNZIONE PER PRENDERE I DATI DELLE TRACCE
 def get_tracks_info(playlist_id):
+    sp = get_spotify_client()
     try:
-        playlist = nosplogin.playlist_tracks(playlist_id)
+        playlist = sp.playlist_tracks(playlist_id)
         items = playlist.get('items', [])
         tracks_info = []
         for item in items:
@@ -37,10 +36,11 @@ def get_tracks_info(playlist_id):
 
 # FUNZIONE PER PRENDERE I GENERI DELLE TRACCE
 def get_artist_genres(artist_ids):
+    sp = get_spotify_client()
     genres = []
     for artist_id in artist_ids:
         try:
-            artist = nosplogin.artist(artist_id)
+            artist = sp.artist(artist_id)
             genres.extend(artist.get('genres', []))
         except:
             continue
@@ -48,6 +48,7 @@ def get_artist_genres(artist_ids):
 
 #TRACCE COMUNI
 def get_common_tracks(tracks1, tracks2):
+    sp = get_spotify_client()
     names1 = set([t['name'].lower() for t in tracks1])
     names2 = set([t['name'].lower() for t in tracks2])
     common = names1 & names2
@@ -55,6 +56,7 @@ def get_common_tracks(tracks1, tracks2):
 
 #ARTISTI COMUNI
 def get_common_artists(tracks1, tracks2):
+    sp = get_spotify_client()
     artists1 = [artist for t in tracks1 for artist in t['artists']]
     artists2 = [artist for t in tracks2 for artist in t['artists']]
     common = set(artists1) & set(artists2)
@@ -64,12 +66,14 @@ def get_common_artists(tracks1, tracks2):
 
 #POPOLARITà MEDIA
 def get_average_popularity(tracks):
+    sp = get_spotify_client()
     if not tracks:
         return 0
     return sum([t['popularity'] for t in tracks]) / len(tracks)
 
 #ANNO DI PUBBLICAZIONE
 def get_release_years(tracks):
+    sp = get_spotify_client()
     years = []
     for t in tracks:
         try:
@@ -85,6 +89,7 @@ def get_release_years(tracks):
 #FUNZIONE COMPARA
 @compare_bp.route('/compare')
 def compare_playlists():
+    sp = get_spotify_client()
     playlist_ids = request.args.get('playlist_ids')
     if not playlist_ids:
         return "Missing playlist_ids", 400
@@ -96,8 +101,8 @@ def compare_playlists():
     tracks1 = get_tracks_info(playlist_ids[0])
     tracks2 = get_tracks_info(playlist_ids[1])
 
-    playlist1 = nosplogin.playlist(playlist_ids[0])
-    playlist2 = nosplogin.playlist(playlist_ids[1])
+    playlist1 = sp.playlist(playlist_ids[0])
+    playlist2 = sp.playlist(playlist_ids[1])
     name1 = playlist1['name']
     name2 = playlist2['name']
 
