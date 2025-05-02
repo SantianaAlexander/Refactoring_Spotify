@@ -2,20 +2,20 @@
 from flask import Blueprint, request, render_template
 import spotipy
 from services.spotify_oauth import sp_oauth
+from services.spotify_client import get_spotify_client
  
 suggested_bp = Blueprint('suggested', __name__)
 
-nosplogin = spotipy.Spotify(client_credentials_manager=sp_oauth)
-
 # FUNZIONE PER OTTENERE SUGGERIMENTI DI BRANI BASATI SU ARTISTA, BRANO O GENERE
 def get_suggestions(artist_name=None, track_name=None, genre=None):
+    sp = get_spotify_client()
     try:
         if artist_name:
-            results = nosplogin.search(q=f"artist:{artist_name}", type="artist", limit=1)
+            results = sp.search(q=f"artist:{artist_name}", type="artist", limit=1)
             if results['artists']['items']:
                 artist = results['artists']['items'][0]
                 artist_id = artist['id']
-                tracks = nosplogin.artist_top_tracks(artist_id)
+                tracks = sp.artist_top_tracks(artist_id)
                 suggestions = []
                 for track in tracks['tracks']:
                     suggestion = {
@@ -30,7 +30,7 @@ def get_suggestions(artist_name=None, track_name=None, genre=None):
                 return suggestions
 
         elif track_name:
-            results = nosplogin.search(q=f"track:{track_name}", type="track", limit=5)
+            results = sp.search(q=f"track:{track_name}", type="track", limit=5)
             suggestions = []
             for track in results['tracks']['items']:
                 suggestion = {
@@ -45,7 +45,7 @@ def get_suggestions(artist_name=None, track_name=None, genre=None):
             return suggestions
 
         elif genre:
-            results = nosplogin.search(q=f"genre:{genre}", type="track", limit=5)
+            results = sp.search(q=f"genre:{genre}", type="track", limit=5)
             suggestions = []
             for track in results['tracks']['items']:
                 suggestion = {
